@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ops研习社 · DevOps 与自动运维学习站</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='10' width='52' height='44' rx='8' fill='%230B1220' stroke='%233AD9C1' stroke-width='4'/%3E%3Cpath d='M18 34l10-9-10-9' fill='none' stroke='%233AD9C1' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M32 46h14' stroke='%23F2B25B' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+/* ===== 设计系统 ===== */
+:root{
+  --bg:#0B1220; --surface:#101A2E; --surface2:#15223A; --surface3:#1A2946;
+  --border:#1F2E4C; --border-strong:#2B3F66;
+  --text:#E7EDF8; --muted:#90A7CB; --dim:#5C7296;
+  --accent:#3AD9C1; --accent-weak:rgba(58,217,193,.12); --accent-line:rgba(58,217,193,.35);
+  --amber:#F2B25B; --amber-weak:rgba(242,178,91,.12);
+  --red:#E5685A; --red-weak:rgba(229,104,90,.12);
+  --blue:#6FA8F5; --blue-weak:rgba(111,168,245,.12);
+  --mono:"Cascadia Code","JetBrains Mono",Consolas,"Courier New",monospace;
+  --sans:"PingFang SC","Microsoft YaHei UI","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
+  --r:14px; --r-sm:10px;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--sans);
+  font-size:15.5px;line-height:1.75;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(1100px 500px at 80% -10%,rgba(58,217,193,.08),transparent 60%),
+                   radial-gradient(900px 420px at 8% 0%,rgba(111,168,245,.07),transparent 60%);
+  background-attachment:fixed;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:var(--accent);color:#04211C}
+
+/* ===== 顶部导航 ===== */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,18,32,.86);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none}
+.brand-name{font-weight:800;font-size:17px;letter-spacing:.5px;white-space:nowrap}
+.brand-name .dot{color:var(--accent)}
+.nav-tabs{display:flex;gap:6px;margin-left:8px;flex:1;min-width:0}
+.nav-tab{
+  display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;
+  color:var(--muted);font-size:14.5px;font-weight:600;cursor:pointer;
+  border:1px solid transparent;transition:color .15s,background .15s,border-color .15s;
+}
+.nav-tab:hover{color:var(--text);background:var(--surface2)}
+.nav-tab.active{color:var(--text);background:var(--surface2);border-color:var(--border-strong)}
+.nav-tab.active svg{color:var(--accent)}
+.nav-status{
+  flex:none;display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);
+  border:1px solid var(--border);padding:5px 10px;border-radius:999px;background:var(--surface);
+}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(58,217,193,.5);animation:pulse 2.2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 7px rgba(58,217,193,0)}100%{box-shadow:0 0 0 0 rgba(58,217,193,0)}}
+
+/* ===== 布局 ===== */
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.view{display:none;padding:36px 0 60px}
+.view.active{display:block;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ===== 通用元件 ===== */
+.kicker{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+.kicker::before{content:"";width:22px;height:1px;background:var(--accent-line)}
+.section-title{font-size:clamp(21px,3vw,27px);font-weight:800;letter-spacing:.5px;line-height:1.35}
+.section-sub{color:var(--muted);font-size:14.5px;margin-top:6px;max-width:640px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;border:1px solid var(--border-strong);background:var(--surface2);color:var(--muted)}
+.badge.teal{background:var(--accent-weak);border-color:var(--accent-line);color:var(--accent)}
+.badge.amber{background:var(--amber-weak);border-color:rgba(242,178,91,.35);color:var(--amber)}
+.badge.blue{background:var(--blue-weak);border-color:rgba(111,168,245,.35);color:var(--blue)}
+.badge.red{background:var(--red-weak);border-color:rgba(229,104,90,.35);color:var(--red)}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:var(--r-sm);
+  font-size:14px;font-weight:700;cursor:pointer;border:1px solid var(--border-strong);
+  background:var(--surface2);color:var(--text);transition:background .15s,border-color .15s,transform .1s;
+}
+.btn:hover{background:var(--surface3);border-color:var(--accent-line)}
+.btn:active{transform:translateY(1px)}
+.btn.teal{background:var(--accent);border-color:var(--accent);color:#04211C}
+.btn.teal:hover{background:#5CE3CE;border-color:#5CE3CE}
+.btn.ghost{background:transparent}
+.btn.sm{padding:7px 13px;font-size:13px}
+
+/* 终端窗格 */
+.term{
+  border:1px solid var(--border-strong);border-radius:var(--r);overflow:hidden;
+  background:#0A1220;box-shadow:var(--shadow);
+}
+.term-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.term-dot{width:11px;height:11px;border-radius:50%}
+.term-title{margin-left:6px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.term-body{padding:16px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.9;color:#C9D8EF;overflow-x:auto}
+.tp{color:var(--accent)} .ts{color:var(--muted)} .ty{color:var(--amber)} .tg{color:#7FB98A} .tw{color:var(--text)}
+.term-body .ln{white-space:pre-wrap;word-break:break-all}
+.blink{animation:blink 1.1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ===== 学习页 Hero ===== */
+.hero{display:grid;grid-template-columns:1fr;gap:28px;align-items:center;margin-bottom:44px}
+.hero h1{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.22;letter-spacing:.5px;margin-bottom:16px}
+.hero h1 .hl{color:var(--accent);position:relative}
+.hero h1 .hl::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:8px;background:var(--accent-weak);z-index:-1}
+.hero p.lead{color:var(--muted);font-size:16px;max-width:560px;margin-bottom:22px}
+.hero-stats{display:flex;flex-wrap:wrap;gap:10px}
+.hero-stats .stat{display:flex;align-items:baseline;gap:8px;padding:10px 16px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface)}
+.hero-stats .num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent)}
+.hero-stats .lbl{font-size:12.5px;color:var(--muted)}
+
+/* ===== 今日学习 ===== */
+.today-card{
+  border:1px solid var(--border-strong);border-radius:var(--r);overflow:hidden;
+  background:linear-gradient(160deg,var(--surface) 0%,var(--surface2) 100%);box-shadow:var(--shadow);
+}
+.today-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.today-head .tt{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px}
+.today-head .date{font-family:var(--mono);color:var(--muted);font-size:13px}
+.today-grid{display:grid;grid-template-columns:1fr;gap:14px;padding:18px 20px}
+.know-card{border:1px solid var(--border);border-radius:var(--r-sm);padding:18px 20px;background:var(--surface);position:relative}
+.know-card .tag-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.know-card h3{font-size:18px;font-weight:800;margin-bottom:8px;line-height:1.4}
+.know-card .desc{color:var(--muted);font-size:14.5px;margin-bottom:12px}
+.know-card .code-block{background:#0A1220;border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:1.8;overflow-x:auto;color:#C9D8EF;white-space:pre-wrap;word-break:break-all}
+.cmd-card{border:1px solid var(--border);border-radius:var(--r-sm);padding:16px 18px;background:var(--surface)}
+.cmd-card .lbl{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;letter-spacing:1.5px;color:var(--amber);margin-bottom:10px}
+.cmd-line{display:flex;align-items:flex-start;gap:10px;font-family:var(--mono);font-size:14.5px;background:#0A1220;border:1px solid var(--border);border-radius:8px;padding:12px 14px;overflow-x:auto}
+.cmd-line .p{color:var(--accent);flex:none}
+.cmd-line code{color:var(--text);white-space:pre-wrap;word-break:break-all}
+.cmd-exp{color:var(--muted);font-size:13.5px;margin-top:10px}
+.today-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:0 20px 18px}
+.today-actions .hint{font-size:12.5px;color:var(--dim);display:flex;align-items:center;gap:6px}
+
+/* ===== 知识地图 ===== */
+.map-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:24px}
+.mod-card{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);overflow:hidden;transition:border-color .15s}
+.mod-card:hover{border-color:var(--border-strong)}
+.mod-head{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;user-select:none}
+.mod-ico{width:42px;height:42px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--surface3);border:1px solid var(--border)}
+.mod-ico svg{width:22px;height:22px;color:var(--accent)}
+.mod-title{flex:1;min-width:0}
+.mod-title b{font-size:15.5px;font-weight:700;display:block}
+.mod-title span{font-size:12.5px;color:var(--dim)}
+.mod-prog{font-family:var(--mono);font-size:12px;color:var(--muted);flex:none;min-width:52px;text-align:right}
+.mod-arrow{flex:none;color:var(--dim);transition:transform .2s}
+.mod-card.open .mod-arrow{transform:rotate(90deg)}
+.mod-body{display:none;padding:0 18px 18px;border-top:1px dashed var(--border)}
+.mod-card.open .mod-body{display:block}
+.know-list{list-style:none;margin-top:14px}
+.know-list li{display:flex;align-items:flex-start;gap:12px;padding:12px 6px;border-bottom:1px solid rgba(31,46,76,.55)}
+.know-list li:last-child{border-bottom:none}
+.know-list .k-title{font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.know-list .k-desc{color:var(--muted);font-size:13.5px;margin-top:3px;line-height:1.65}
+.know-list .k-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.tag-pill{font-size:11.5px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--dim);background:var(--surface2);font-family:var(--mono)}
+.learn-toggle{
+  flex:none;width:30px;height:30px;border-radius:8px;border:1px solid var(--border-strong);
+  background:var(--surface2);color:var(--dim);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s,color .15s,border-color .15s;margin-top:2px;
+}
+.learn-toggle:hover{border-color:var(--accent-line);color:var(--accent)}
+.learn-toggle.done{background:var(--accent);border-color:var(--accent);color:#04211C}
+.learn-toggle svg{width:15px;height:15px}
+.search-row{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;align-items:center}
+.search-input{
+  flex:1;min-width:220px;padding:11px 16px;border-radius:var(--r-sm);font-size:14.5px;
+  border:1px solid var(--border-strong);background:var(--surface);color:var(--text);outline:none;
+}
+.search-input::placeholder{color:var(--dim)}
+.search-input:focus{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-weak)}
+.search-count{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.no-result{padding:26px;text-align:center;color:var(--dim);border:1px dashed var(--border-strong);border-radius:var(--r);display:none}
+
+/* 进度条 */
+.progress-card{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:20px;margin-top:26px;display:flex;flex-direction:column;gap:14px}
+.progress-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.progress-top .pt-t{font-weight:800;font-size:16px;display:flex;align-items:center;gap:9px}
+.progress-top .pt-n{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.bar{height:10px;border-radius:999px;background:var(--surface3);border:1px solid var(--border);overflow:hidden}
+.bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#5CE3CE);border-radius:999px;transition:width .5s ease}
+.progress-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.progress-foot .hint{font-size:12.5px;color:var(--dim)}
+
+/* ===== 学习路径 ===== */
+.path-card{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:22px;margin-top:26px}
+.path-steps{display:grid;grid-template-columns:1fr;gap:0;margin-top:16px;counter-reset:path}
+.path-step{display:flex;gap:14px;padding:12px 0;position:relative}
+.path-step .n{
+  flex:none;width:30px;height:30px;border-radius:50%;background:var(--surface3);border:1px solid var(--border-strong);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);margin-top:2px;
+}
+.path-step .body b{display:block;font-size:14.5px;margin-bottom:2px}
+.path-step .body span{color:var(--muted);font-size:13px}
+
+/* ===== 资讯页 ===== */
+.news-head{display:flex;flex-direction:column;gap:16px;margin-bottom:30px}
+.news-title-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.news-title-row h1{font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:.5px}
+.news-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.news-meta .sep{color:var(--dim)}
+.update-note{
+  border:1px dashed var(--border-strong);border-radius:var(--r);padding:14px 18px;font-size:13.5px;color:var(--muted);
+  display:flex;gap:12px;align-items:flex-start;background:var(--surface);
+}
+.update-note svg{flex:none;color:var(--accent);margin-top:2px}
+.cat-block{margin-bottom:36px}
+.cat-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.cat-head h2{font-size:19px;font-weight:800;letter-spacing:.5px}
+.cat-head .cnt{font-family:var(--mono);font-size:12.5px;color:var(--dim)}
+.news-list{display:grid;grid-template-columns:1fr;gap:14px}
+.news-item{
+  border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;background:var(--surface);
+  display:flex;flex-direction:column;gap:10px;transition:border-color .15s,background .15s;
+}
+.news-item:hover{border-color:var(--border-strong);background:var(--surface2)}
+.news-item .n-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.news-item .n-date{font-family:var(--mono);font-size:12px;color:var(--dim);flex:none}
+.news-item h3{font-size:16px;font-weight:700;line-height:1.45}
+.news-item h3 a{color:var(--text)}
+.news-item h3 a:hover{color:var(--accent);text-decoration:none}
+.news-item .n-desc{color:var(--muted);font-size:13.5px;line-height:1.7}
+.news-item .n-src{font-size:12px;color:var(--dim);display:flex;align-items:center;gap:6px;font-family:var(--mono)}
+.tips-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:24px}
+.tip-item{display:flex;gap:14px;padding:16px 18px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);align-items:flex-start}
+.tip-item .t-ico{flex:none;width:34px;height:34px;border-radius:9px;background:var(--amber-weak);border:1px solid rgba(242,178,91,.3);display:flex;align-items:center;justify-content:center;color:var(--amber)}
+.tip-item .t-ico svg{width:18px;height:18px}
+.tip-item .t-body b{display:block;font-size:14.5px;margin-bottom:3px}
+.tip-item .t-body p{color:var(--muted);font-size:13.5px;line-height:1.65}
+
+/* ===== 页脚 ===== */
+.site-footer{border-top:1px solid var(--border);padding:26px 0 40px;margin-top:20px}
+.foot-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:10px;justify-content:space-between;color:var(--dim);font-size:13px}
+.foot-inner .row{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+.foot-inner .row a{color:var(--muted)}
+.foot-inner .row a:hover{color:var(--accent)}
+
+/* ===== 桌面端 ===== */
+@media (min-width:768px){
+  .today-grid{grid-template-columns:3fr 2fr;padding:20px}
+  .map-grid{grid-template-columns:repeat(2,1fr)}
+  .hero{grid-template-columns:1.05fr .95fr}
+  .news-list{grid-template-columns:repeat(2,1fr)}
+  .tips-grid{grid-template-columns:repeat(2,1fr)}
+  .path-steps{grid-template-columns:repeat(3,1fr);gap:10px 24px}
+  .path-step{padding:14px 0}
+  .foot-inner{flex-direction:row;align-items:center}
+}
+@media (min-width:1024px){
+  .map-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部导航 ===== -->
+<header class="site-header">
+  <div class="nav-inner">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="10" width="52" height="44" rx="8" fill="#101A2E" stroke="#3AD9C1" stroke-width="4"/><path d="M18 34l10-9-10-9" fill="none" stroke="#3AD9C1" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 46h14" stroke="#F2B25B" stroke-width="4" stroke-linecap="round"/></svg>
+      <span class="brand-name">Ops<span class="dot">研习社</span></span>
+    </div>
+    <nav class="nav-tabs" role="tablist">
+      <a class="nav-tab active" href="#/learn" data-view="learn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        学习
+      </a>
+      <a class="nav-tab" href="#/news" data-view="news">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>
+        资讯周报
+      </a>
+    </nav>
+    <div class="nav-status" title="学习内容每日自动轮换，资讯每周自动更新">
+      <span class="pulse"></span><span id="navUpdateText">每日自动更新</span>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ===== 视图：学习 ===== -->
+<section class="view active" id="view-learn">
+  <div class="wrap">
+    <!-- Hero -->
+    <div class="hero">
+      <div>
+        <div class="kicker">DevOps · 自动运维 · 学习控制台</div>
+        <h1>把 DevOps 与自动运维，<br>拆成<span class="hl">每天能学完的一课</span></h1>
+        <p class="lead">从 Git 到 Kubernetes，从 CI/CD 到 SRE——系统化的知识地图，配每日自动轮换的一课与一条实用命令，帮你稳步建立自动化运维能力。</p>
+        <div class="hero-stats">
+          <div class="stat"><span class="num" id="statModules">9</span><span class="lbl">知识模块</span></div>
+          <div class="stat"><span class="num" id="statItems">—</span><span class="lbl">知识点</span></div>
+          <div class="stat"><span class="num" id="statDaily">1</span><span class="lbl">每日自动一课</span></div>
+        </div>
+      </div>
+      <div class="term" aria-label="示例终端">
+        <div class="term-bar"><span class="term-dot" style="background:#E5685A"></span><span class="term-dot" style="background:#F2B25B"></span><span class="term-dot" style="background:#3AD9C1"></span><span class="term-title">~/ops-academy</span></div>
+        <div class="term-body">
+          <div class="ln"><span class="tp">$</span> <span class="tw">git log --oneline --graph -5</span></div>
+          <div class="ln"><span class="tg">*</span> <span class="tw">a3f9c2d</span> <span class="ts">feat: 金丝雀发布加入错误预算校验</span></div>
+          <div class="ln"><span class="tg">*</span> <span class="tw">b7e01aa</span> <span class="ts">fix: 修复镜像构建缓存失效</span></div>
+          <div class="ln"><span class="tg">*</span> <span class="tw">c12d0f8</span> <span class="ts">chore: 流水线接入 SBOM 扫描</span></div>
+          <div class="ln"><span class="tp">$</span> <span class="tw">kubectl get pods -A | grep -i running</span></div>
+          <div class="ln"><span class="ts">NAMESPACE     NAME                 READY   STATUS</span></div>
+          <div class="ln"><span class="tw">production    api-gw-7b8c9       2/2     <span class="tg">Running</span></span></div>
+          <div class="ln"><span class="tw">production    order-svc-4d2e1     3/3     <span class="tg">Running</span></span></div>
+          <div class="ln"><span class="tp">$</span> <span class="tw">terraform plan -out=plan.tfplan</span><span class="blink" style="color:var(--accent)">▊</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 今日学习 -->
+    <section aria-label="今日学习">
+      <div class="today-card">
+        <div class="today-head">
+          <div class="tt">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            今日一课
+            <span class="badge teal">自动更新 · 每日轮换</span>
+          </div>
+          <span class="date" id="todayDate">—</span>
+        </div>
+        <div class="today-grid">
+          <div class="know-card" id="todayKnow">
+            <div class="tag-row" id="todayTags"></div>
+            <h3 id="todayTitle">—</h3>
+            <div class="desc" id="todayDesc"></div>
+            <div class="code-block" id="todayCode" style="display:none"></div>
+          </div>
+          <div class="cmd-card">
+            <div class="lbl">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+              今日命令
+            </div>
+            <div class="cmd-line"><span class="p">$</span><code id="todayCmd">—</code></div>
+            <div class="cmd-exp" id="todayCmdExp"></div>
+          </div>
+        </div>
+        <div class="today-actions">
+          <button class="btn teal sm" id="btnMarkToday">标记今日已学</button>
+          <button class="btn sm" id="btnNextToday">换一课</button>
+          <span class="hint" id="todayHint">打开页面即自动更新；换个日期再来，内容也会变。</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 知识地图 -->
+    <section style="margin-top:44px" aria-label="知识地图">
+      <div class="kicker">Knowledge Map</div>
+      <h2 class="section-title">知识地图</h2>
+      <p class="section-sub">按模块组织全部知识点。点击模块展开明细，勾选「已学」记录进度，进度保存在本地浏览器。</p>
+      <div class="search-row">
+        <input class="search-input" id="knowSearch" type="text" placeholder="搜索知识点，如：金丝雀 / Terraform / kubectl ...">
+        <span class="search-count" id="searchCount"></span>
+      </div>
+      <div class="map-grid" id="mapGrid"></div>
+      <div class="no-result" id="noResult">没有匹配的知识点，换个关键词试试。</div>
+      <div class="progress-card">
+        <div class="progress-top">
+          <div class="pt-t">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            学习进度
+          </div>
+          <span class="pt-n" id="progressText">0 / 0</span>
+        </div>
+        <div class="bar"><i id="progressBar"></i></div>
+        <div class="progress-foot">
+          <span class="hint">进度保存在本浏览器 localStorage，换设备不共享。</span>
+          <button class="btn ghost sm" id="btnReset">重置进度</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 学习路径 -->
+    <section style="margin-top:44px" aria-label="学习路径">
+      <div class="kicker">Roadmap</div>
+      <h2 class="section-title">推荐学习路径</h2>
+      <p class="section-sub">零基础到自动化运维一线，按这个顺序推进最顺。</p>
+      <div class="path-card">
+        <div class="path-steps">
+          <div class="path-step"><span class="n">01</span><div class="body"><b>DevOps 基础与文化</b><span>理解协作模型、DORA 指标，建立自动化心智</span></div></div>
+          <div class="path-step"><span class="n">02</span><div class="body"><b>版本控制 Git</b><span>分支策略与协作规范，一切的源头</span></div></div>
+          <div class="path-step"><span class="n">03</span><div class="body"><b>CI/CD 流水线</b><span>构建、测试、发布的自动化闭环</span></div></div>
+          <div class="path-step"><span class="n">04</span><div class="body"><b>容器化</b><span>镜像、Dockerfile 与最佳实践</span></div></div>
+          <div class="path-step"><span class="n">05</span><div class="body"><b>Kubernetes</b><span>编排、自愈、声明式管理</span></div></div>
+          <div class="path-step"><span class="n">06</span><div class="body"><b>基础设施即代码</b><span>Terraform / Ansible，环境可复现</span></div></div>
+          <div class="path-step"><span class="n">07</span><div class="body"><b>可观测性</b><span>指标、日志、链路三大信号</span></div></div>
+          <div class="path-step"><span class="n">08</span><div class="body"><b>SRE 与稳定性</b><span>SLO / 错误预算 / 事故复盘</span></div></div>
+          <div class="path-step"><span class="n">09</span><div class="body"><b>自动化运维进阶</b><span>脚本、配置中心、密钥管理、自愈</span></div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- ===== 视图：资讯 ===== -->
+<section class="view" id="view-news">
+  <div class="wrap">
+    <div class="news-head">
+      <div class="news-title-row">
+        <h1>DevOps 资讯周报</h1>
+        <span class="badge teal">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          每周自动更新
+        </span>
+      </div>
+      <div class="news-meta" id="newsMeta"></div>
+      <div class="update-note">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l2.5 2.5"/><circle cx="12" cy="12" r="10"/></svg>
+        <span>本期资讯由每周定时任务自动聚合全网 DevOps / 自动化运维新闻、更新与实用 Tip 后写入本页；发布时间、来源与链接均为真实可追溯。</span>
+      </div>
+    </div>
+    <div id="newsGrid"></div>
+    <div class="kicker" style="margin-top:8px">Tips</div>
+    <h2 class="section-title">本周实用 Tips</h2>
+    <p class="section-sub">每周精选几条可直接落地的运维小贴士。</p>
+    <div class="tips-grid" id="tipsGrid"></div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div class="row">
+      <span>Ops研习社 · DevOps 与自动运维学习站</span>
+      <span id="footYear"></span>
+    </div>
+    <div class="row">
+      <span>学习内容每日自动轮换</span>
+      <span>资讯周报每周自动更新</span>
+      <a href="#/learn">回到学习</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===== 学习数据 ===== */
+const MODULES = ['基础与文化','版本控制 Git','CI/CD 流水线','容器化','Kubernetes','基础设施即代码','可观测性','SRE 与稳定性','自动化运维进阶'];
+
+const KNOWLEDGE = [
+/* --- 模块1 基础与文化 --- */
+{id:'m1-1',mod:'基础与文化',title:'DevOps 是什么',desc:'DevOps 不是工具也不是岗位，而是一套把开发与运维目标对齐的文化与实践：通过自动化流水线、共享责任和持续度量，让团队能高频、安全地交付软件。核心四要素常记作 CAMS——文化、自动化、度量、共享。',code:null,tags:['入门','文化']},
+{id:'m1-2',mod:'基础与文化',title:'CALMS 成熟度模型',desc:'用五个维度评估组织 DevOps 成熟度：Culture（协作文化）、Automation（自动化程度）、Lean（精益思想、消除浪费）、Measurement（数据驱动）、Sharing（知识共享）。先诊断短板再针对性投入，比盲目上工具有效。',code:null,tags:['评估','框架']},
+{id:'m1-3',mod:'基础与文化',title:'DORA 四指标',desc:'衡量交付效能的标准：部署频率、变更前置时间、变更失败率、故障恢复时间（MTTR）。精英团队追求高频、低失败、快恢复；四个指标一起看，避免只优化速度而牺牲稳定性。',code:null,tags:['度量','绩效']},
+{id:'m1-4',mod:'基础与文化',title:'持续交付 vs 持续部署',desc:'持续交付（Continuous Delivery）：代码随时处于可发布状态，是否上线由人决定；持续部署（Continuous Deployment）：通过全部检查后自动上线。多数团队从持续交付起步，逐步过渡。',code:null,tags:['CD','概念辨析']},
+{id:'m1-5',mod:'基础与文化',title:'价值流映射',desc:'把「需求 → 编码 → 构建 → 测试 → 部署 → 运维」整条链路画出来，标出每个环节的耗时、等待和手工步骤。价值流里最长的等待往往不是执行，而是排队与审批。',code:null,tags:['精益','流程']},
+{id:'m1-6',mod:'基础与文化',title:'三种部署策略速览',desc:'蓝绿部署：新旧两套环境切换，回滚快但成本高；金丝雀：先放小比例流量验证再放量，风险可控；滚动更新：逐个替换实例，无需额外环境。选型看业务容忍度与基础设施成本。',code:null,tags:['部署','选型']},
+
+/* --- 模块2 版本控制 Git --- */
+{id:'m2-1',mod:'版本控制 Git',title:'Git 三个工作区',desc:'工作区（working tree）→ 暂存区（index）→ 本地仓库（HEAD）。修改后先 git add 进暂存区，再 git commit 固化到仓库；git status 随时查看状态，git diff 查看未暂存改动。',code:'git status\ngit diff            # 未暂存的改动\ngit diff --staged   # 已暂存的改动\ngit add -p          # 交互式分批暂存',tags:['基础','工作流']},
+{id:'m2-2',mod:'版本控制 Git',title:'分支策略怎么选',desc:'GitFlow 适合版本化发布，但流程重；GitHub Flow 轻量、PR 驱动，适合持续部署；Trunk-Based（主干开发）强调小步快跑、短分支，配合功能开关，是精英团队的常见选择。策略要匹配发布节奏，不要教条。',code:null,tags:['分支','协作']},
+{id:'m2-3',mod:'版本控制 Git',title:'merge 与 rebase 的区别',desc:'merge 保留历史分叉（真实但杂乱），rebase 把提交重放到新基线（线性整洁但改写历史）。原则：本地未推送的分支随便 rebase；已共享的分支只 merge 或采用 merge 提交，避免团队历史错乱。',code:'git merge main          # 生成一个合并提交\ngit rebase main         # 把当前分支重放到 main 之上\ngit pull --rebase       # 拉取时保持线性历史',tags:['进阶','协作']},
+{id:'m2-4',mod:'版本控制 Git',title:'语义化版本 SemVer',desc:'版本号 MAJOR.MINOR.PATCH：不兼容变更升 MAJOR，向后兼容的新功能升 MINOR，向后兼容的缺陷修复升 PATCH。加上 pre-release 标记（如 1.2.0-rc.1）用于发布前验证。机器可解析，依赖解析才有意义。',code:null,tags:['规范','版本']},
+{id:'m2-5',mod:'版本控制 Git',title:'保护分支与 PR 评审',desc:'生产分支开启分支保护：禁止直接 push、要求 PR、强制评审与 CI 通过。规范提交信息（如 conventional commits）能让 changelog、版本号生成自动化。',code:null,tags:['规范','安全']},
+{id:'m2-6',mod:'版本控制 Git',title:'git revert 与 git reset',desc:'revert 生成一个「反向提交」，不改历史，适合已推送的提交；reset 移动 HEAD 指针、可能丢失提交，只用于本地。回滚线上代码永远优先 revert。',code:'git revert <commit>     # 安全回滚（保留历史）\ngit reset --soft HEAD~1  # 撤销提交但保留改动\ngit reset --hard HEAD~1  # 危险：丢弃改动',tags:['进阶','回滚']},
+
+/* --- 模块3 CI/CD 流水线 --- */
+{id:'m3-1',mod:'CI/CD 流水线',title:'什么是持续集成 CI',desc:'开发者频繁（每天多次）把代码合并到主干，每次合并都自动触发构建与测试，尽早暴露集成问题。CI 的关键是反馈要快：构建与单测控制在几分钟内。',code:null,tags:['CI','基础']},
+{id:'m3-2',mod:'CI/CD 流水线',title:'什么是持续交付 CD',desc:'在 CI 基础上，把产物自动部署到类生产环境并跑验收，让每个提交都「可发布」。部署动作本身自动化，是否对用户放量由业务决定。',code:null,tags:['CD','基础']},
+{id:'m3-3',mod:'CI/CD 流水线',title:'流水线的典型阶段',desc:'lint → 单元测试 → 构建制品 → 镜像扫描/安全测试 → 推送制品库 → 部署到测试环境 → 冒烟测试。阶段越靠前成本越低，把最贵的检查放在越早阶段，失败就快速止损。',code:null,tags:['设计','流水线']},
+{id:'m3-4',mod:'CI/CD 流水线',title:'不可变制品',desc:'构建一次、处处使用：制品带唯一版本号与校验和，测试环境验证的就是生产要跑的同一份。禁止在部署时重新编译或改文件，否则「测试通过、生产翻车」。',code:null,tags:['制品','最佳实践']},
+{id:'m3-5',mod:'CI/CD 流水线',title:'蓝绿部署',desc:'同一时间只让一套环境（蓝或绿）承接流量。发布时在新环境部署并验证，验证通过后把流量整体切换过去，出问题立即切回。回滚是「切流量」而非「改代码」，秒级完成，代价是需要双倍资源。',code:null,tags:['部署','发布']},
+{id:'m3-6',mod:'CI/CD 流水线',title:'金丝雀发布',desc:'先向新版本放 5%–10% 流量，观察错误率与延迟，逐步放量到 100%。结合错误预算：放量前先评估本次变更对错误预算的影响，超预算就暂停。',code:null,tags:['部署','发布']},
+{id:'m3-7',mod:'CI/CD 流水线',title:'滚动更新',desc:'Kubernetes Deployment 默认策略：逐个替换旧 Pod，期间新旧版本共存。优点是不需要额外环境、资源占用小；缺点是无法整体回滚（只能重新滚动），大版本不兼容时慎用。',code:null,tags:['部署','K8s']},
+
+/* --- 模块4 容器化 --- */
+{id:'m4-1',mod:'容器化',title:'容器 vs 虚拟机',desc:'容器共享宿主机内核，只隔离进程与文件系统（秒级启动、镜像小）；虚拟机各带完整操作系统（隔离强、启动慢）。容器适合无状态应用与微服务，虚拟机适合强隔离与异构环境。',code:null,tags:['基础','概念']},
+{id:'m4-2',mod:'容器化',title:'Docker 三大对象',desc:'镜像（Image）：只读模板；容器（Container）：镜像的运行实例；仓库（Registry）：镜像分发中心。构建流程是 Dockerfile → build → 镜像 → push → 拉取运行。',code:'docker build -t myapp:v1.0 .\ndocker push registry.example.com/myapp:v1.0\ndocker run -d -p 8080:8080 --name myapp myapp:v1.0',tags:['Docker','基础']},
+{id:'m4-3',mod:'容器化',title:'镜像分层与缓存',desc:'Dockerfile 每条指令生成一层，构建时命中缓存则跳过。把不常变的指令（安装依赖）放前面、频繁变的（拷贝代码）放后面，能显著加速构建；也正因分层，小改动不必重建全部。',code:'FROM node:20\nWORKDIR /app\nCOPY package*.json ./   # 依赖先拷贝\nRUN npm ci              # 命中缓存\nCOPY . .                # 代码最后拷贝',tags:['Docker','构建']},
+{id:'m4-4',mod:'容器化',title:'多阶段构建',desc:'一个 Dockerfile 用多个 FROM：构建阶段装编译工具，运行阶段只拷贝产物与运行时依赖。最终镜像小、攻击面小。',code:'FROM golang:1.22 AS build\nWORKDIR /src\nCOPY . .\nRUN CGO_ENABLED=0 go build -o /app\n\nFROM alpine:3.20\nCOPY --from=build /app /usr/local/bin/app\nUSER 10001:10001\nENTRYPOINT ["app"]',tags:['Docker','最佳实践']},
+{id:'m4-5',mod:'容器化',title:'容器安全基线',desc:'用最小基础镜像（alpine/distroless）、非 root 运行、只读根文件系统、定期扫描镜像漏洞（trivy 等）、不把密钥打进镜像（用 Secret 挂载）。容器逃逸虽罕见，但纵深防御不可省。',code:'USER 10001:10001\nRUN chmod +x /app\n# 运行时以非 root 启动，降低逃逸影响',tags:['安全','最佳实践']},
+{id:'m4-6',mod:'容器化',title:'容器常用命令速查',desc:'日常排障高频命令：docker ps 看运行中容器、docker logs 看日志、docker exec 进容器、docker inspect 看配置、docker system df 看磁盘占用、docker stats 看资源。',code:'docker ps -a\ndocker logs -f <container>\ndocker exec -it <container> sh\ndocker inspect <container>\ndocker system df\ndocker stats',tags:['Docker','命令']},
+
+/* --- 模块5 Kubernetes --- */
+{id:'m5-1',mod:'Kubernetes',title:'K8s 架构速览',desc:'控制面（Control Plane）：API Server、Scheduler、Controller Manager、etcd，负责决策与状态存储；数据面（Node）：kubelet、kube-proxy 与容器运行时，负责实际运行。API Server 是唯一入口，所有组件都通过它协作。',code:null,tags:['架构','基础']},
+{id:'m5-2',mod:'Kubernetes',title:'核心对象：Pod / Deployment / Service',desc:'Pod 是最小调度单元（一个或多个容器）；Deployment 声明副本数与更新策略，负责滚动与自愈；Service 提供稳定的集群内访问入口与负载均衡。理解这三者的关系就理解了 K8s 的日常。',code:'apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: api\nspec:\n  replicas: 3\n  selector:\n    matchLabels: { app: api }\n  template:\n    metadata:\n      labels: { app: api }\n    spec:\n      containers:\n      - name: api\n        image: registry/api:v1.0\n        ports: [{ containerPort: 8080 }]',tags:['基础','对象']},
+{id:'m5-3',mod:'Kubernetes',title:'声明式管理 kubectl apply',desc:'把期望状态写进 YAML，kubectl apply -f 让集群朝期望状态收敛。相比 create/run 这类指令式命令，apply 可重复、可审计，配合 Git 就是 GitOps 的基础。',code:'kubectl apply -f deploy.yaml\nkubectl get deploy -n prod\nkubectl diff -f deploy.yaml   # 先看变更再做',tags:['工作流','命令']},
+{id:'m5-4',mod:'Kubernetes',title:'自愈与健康检查',desc:'livenessProbe 探活（失败则重启容器）、readinessProbe 就绪（失败则摘除流量）。ReplicaSet 保证期望副本数，节点故障时自动重建 Pod。写对探针，自愈才成立：探针太松会带病接流量，太紧会抖动。',code:'livenessProbe:\n  httpGet: { path: /healthz, port: 8080 }\n  initialDelaySeconds: 5\nreadinessProbe:\n  httpGet: { path: /ready, port: 8080 }',tags:['可靠性','配置']},
+{id:'m5-5',mod:'Kubernetes',title:'HPA 与 KEDA 弹性伸缩',desc:'HPA（HorizontalPodAutoscaler）按 CPU/内存/自定义指标自动调整副本数；KEDA 进一步支持消息队列等事件源驱动伸缩（如按 Kafka 堆积量）。配合请求数与就绪探针，才能避免「扩容但流量没进来」。',code:null,tags:['弹性','进阶']},
+{id:'m5-6',mod:'Kubernetes',title:'ConfigMap 与 Secret',desc:'配置与敏感信息从镜像里分离：ConfigMap 存普通配置，Secret 存密钥（base64 只是编码不是加密）。Secret 优先用外部密钥管理系统（如 Vault、云 KMS）注入，避免明文落在 etcd 与 YAML 里。',code:'kubectl create cm app-config --from-file=app.conf\nkubectl create secret generic db-pass --from-literal=password=xxx',tags:['配置','安全']},
+{id:'m5-7',mod:'Kubernetes',title:'kubectl 排障三板斧',desc:'get 看状态 → describe 看事件与详情 → logs/exec 看现场。Pod 一直 Pending 查资源与污点，ImagePullBackOff 查镜像名与凭证，CrashLoopBackOff 查探针与启动命令。',code:'kubectl get pods -n prod\nkubectl describe pod <pod> -n prod\nkubectl logs <pod> -n prod --previous',tags:['排障','命令']},
+
+/* --- 模块6 基础设施即代码 --- */
+{id:'m6-1',mod:'基础设施即代码',title:'什么是 IaC',desc:'用代码（而非控制台点击）定义、版本化、审查基础设施：云资源、网络、中间件、配置全部可复现。环境从 Git 重建，变更走评审，漂移可检测——这是「环境即产品」的前提。',code:null,tags:['基础','概念']},
+{id:'m6-2',mod:'基础设施即代码',title:'声明式 vs 指令式',desc:'声明式（Terraform、CloudFormation）：描述目标状态，工具自行计算并执行差异；指令式（Ansible 部分场景、脚本）：描述操作步骤，按顺序执行。声明式更适合云资源编排，指令式更灵活但难保证最终一致。',code:null,tags:['概念','选型']},
+{id:'m6-3',mod:'基础设施即代码',title:'Terraform 核心工作流',desc:'写 HCL 声明资源 → init 初始化 → plan 预演差异 → apply 落地 → state 保存现状。state 是命根子：必须远程存储并加锁（S3/Terraform Cloud），否则多人协作会互相覆盖。',code:'terraform init\nterraform plan -out=plan.tfplan\nterraform apply plan.tfplan\nterraform state list',tags:['Terraform','工作流']},
+{id:'m6-4',mod:'基础设施即代码',title:'Ansible 幂等与 Playbook',desc:'Playbook 声明「目标状态」，重复执行结果一致（幂等）。Inventory 定义主机清单，Module 负责具体动作（yum/service/copy 等）。先 --check 干跑，再小范围执行。',code:'- name: 安装并启动 nginx\n  hosts: web\n  become: yes\n  tasks:\n    - name: install\n      apt: name=nginx state=present\n    - name: service\n      service: name=nginx state=started enabled=yes',tags:['Ansible','配置管理']},
+{id:'m6-5',mod:'基础设施即代码',title:'漂移检测',desc:'实际环境与代码声明不一致就是漂移（drift）：可能来自手工修改、版本不一致、资源被外部改动。Terraform plan 就是免费的漂移探测器；配合定时 plan 扫描与 GitOps 的持续对账（reconcile），把漂移变成可发现、可修复的状态。',code:null,tags:['Terraform','运维']},
+{id:'m6-6',mod:'基础设施即代码',title:'Terraform 环境管理',desc:'用 workspace、目录结构（staging/prod 分目录）或 terragrunt 管理多环境。生产环境变更必须走 plan 评审；变量与密钥用 tfvars 与 Vault/云 SSM 注入，绝不明文写进仓库。',code:null,tags:['Terraform','多环境']},
+
+/* --- 模块7 可观测性 --- */
+{id:'m7-1',mod:'可观测性',title:'可观测性三大信号',desc:'Metrics（指标）：数值化状态，适合告警与趋势；Logs（日志）：事件详情，适合排障；Traces（链路）：一次请求跨服务的全路径，适合定位慢在哪。三者互补，只靠一种就像盲人摸象。',code:null,tags:['基础','概念']},
+{id:'m7-2',mod:'可观测性',title:'Prometheus 指标类型',desc:'Counter 只增不减（请求数）、Gauge 可增可减（CPU 使用率）、Histogram 分桶统计（延迟分布）、Summary 分位数。告警规则写 PromQL：如 rate(http_requests_total[5m]) 计算 QPS。',code:'# 查询最近5分钟平均 QPS\nrate(http_requests_total{job="api"}[5m])\n# 告警：错误率超过 5%\nsum(rate(http_errors_total[5m])) /\n  sum(rate(http_requests_total[5m])) > 0.05',tags:['Prometheus','查询']},
+{id:'m7-3',mod:'可观测性',title:'Grafana：可视化与告警',desc:'Grafana 把 Prometheus 等数据源变成面板与仪表盘，告警规则可以直接在 Grafana 中定义并路由到钉钉/飞书/Slack。告警四原则：必须可执行、必须有人负责、必须指明根因方向、宁可少而准。',code:null,tags:['Grafana','告警']},
+{id:'m7-4',mod:'可观测性',title:'日志管道：收集→传输→存储→检索',desc:'典型栈：Fluent Bit/Filebeat 收集 → Kafka 缓冲 → Logstash 处理 → Elasticsearch/OpenSearch 存储 → Kibana/Grafana 检索。注意日志的保留期、成本与脱敏——日志里最容易泄漏密钥。',code:null,tags:['日志','架构']},
+{id:'m7-5',mod:'可观测性',title:'OpenTelemetry 统一标准',desc:'OTel 提供统一的 API/SDK 采集 traces、metrics、logs，一份埋点可被任何兼容后端消费，避免厂商锁定。2026 年三大信号已全部稳定，是事实上的行业标准。',code:null,tags:['标准','进阶']},
+{id:'m7-6',mod:'可观测性',title:'可执行告警原则',desc:'每条告警必须回答三问：出了什么事、影响谁、先做什么。无法指导行动的告警只会训练团队忽略它。用 SLO 驱动告警（预算消耗型）比裸阈值告警更有业务意义。',code:null,tags:['告警','最佳实践']},
+
+/* --- 模块8 SRE 与稳定性 --- */
+{id:'m8-1',mod:'SRE 与稳定性',title:'SRE 的核心理念',desc:'用软件工程的方式解决运维问题（Google 提出）。核心是把「稳定性」变成可量化、可协商的工程目标，而不是靠人海战术守夜。SRE 与 DevOps 互补：SRE 提供度量与工程化方法，DevOps 提供文化与流程。',code:null,tags:['入门','理念']},
+{id:'m8-2',mod:'SRE 与稳定性',title:'SLO / SLI / 错误预算',desc:'SLI（服务指标）：如可用性、延迟 P99；SLO（服务目标）：SLI 的目标值，如「P99 延迟 < 500ms，99.9% 可用」；错误预算 = 1 − SLO，是允许失败的额度。预算花完就冻结发布，把「可用性」变成发布决策的硬约束。',code:'# 错误预算：SLO 99.9%，一个季度(3个月)允许\n# 3 * 30 * 24 * 60 * 0.001 ≈ 130 分钟故障',tags:['核心','度量']},
+{id:'m8-3',mod:'SRE 与稳定性',title:'消灭 Toil',desc:'Toil 是重复、手工、无持久价值、随规模线性增长的运维苦力（如手工重启、逐个改配置）。SRE 的使命之一就是把 Toil 自动化或消除：先量化 toil 占比，再逐个替换成自动化与自愈。',code:null,tags:['理念','效率']},
+{id:'m8-4',mod:'SRE 与稳定性',title:'无指责复盘',desc:'事故后做 blameless postmortem：不追责个人，追问系统为何允许错误发生。产出物是行动项（改进探针、加自动化检查、补 runbook）并跟踪闭环。组织的记忆靠复盘沉淀，不靠口头教训。',code:null,tags:['流程','文化']},
+{id:'m8-5',mod:'SRE 与稳定性',title:'容量规划',desc:'结合历史趋势、业务预测与压测结果预留容量，而不是等告警再扩容。关键：定义扩容触发指标（不只是 CPU）、预留增长空间、定期压测确认系统真实上限。',code:null,tags:['容量','进阶']},
+{id:'m8-6',mod:'SRE 与稳定性',title:'混沌工程',desc:'在生产（或类生产）主动注入故障（杀 Pod、断网络、延迟），验证系统是否按设计自愈。原则：从小范围开始、先有基线、有回滚预案。Chaos Mesh、Litmus 是常用开源工具。',code:null,tags:['实验','进阶']},
+
+/* --- 模块9 自动化运维进阶 --- */
+{id:'m9-1',mod:'自动化运维进阶',title:'Shell 脚本规范',desc:'脚本可读、可复用：开头 set -euo pipefail（出错即停）、变量加引号、函数化、注释写明用途。避免在生产上执行未评审的脚本——先 git 版本化、走评审、加 --dry-run。',code:'#!/usr/bin/env bash\nset -euo pipefail\n# 备份数据库并保留7天\nbackup_dir="/data/backup/$(date +%F)"\nmkdir -p "$backup_dir"\npg_dump mydb > "$backup_dir/db.sql"\nfind /data/backup -mtime +7 -exec rm -rf {} +',tags:['Shell','脚本']},
+{id:'m9-2',mod:'自动化运维进阶',title:'Python 运维自动化',desc:'比 Shell 更适合复杂逻辑：批量操作、API 调用、数据处理。常用库：requests（HTTP）、paramiko（SSH）、fabric（远程执行）、ansible（大规模配置）、pyyaml（配置解析）。先做只读检查再执行变更。',code:null,tags:['Python','脚本']},
+{id:'m9-3',mod:'自动化运维进阶',title:'定时任务：cron 与 systemd timer',desc:'cron 简单但易漏跑、无依赖管理；systemd timer 支持依赖、失败重试、日志统一，是更现代的替代。运维原则：定时任务必须有日志、有告警、有幂等保护（防重复执行）。',code:'# crontab 每天凌晨2点备份\n0 2 * * * /usr/local/bin/backup.sh\n# systemd timer 更可靠：OnCalendar=daily, Unit=backup.service',tags:['调度','定时']},
+{id:'m9-4',mod:'自动化运维进阶',title:'配置中心',desc:'分布式环境下，配置集中管理并支持动态下发与版本回滚：etcd、Consul、Apollo、Nacos 是常见选择。配合监听机制（配置变更热更新），避免「改配置=重启服务」的笨办法。',code:null,tags:['配置','分布式']},
+{id:'m9-5',mod:'自动化运维进阶',title:'密钥管理 HashiCorp Vault',desc:'密码、令牌、证书不应散落在代码与文件里。Vault 提供动态密钥（临时凭证）、租约、审计；应用通过认证后按需取用。入门路径：静态密钥 → 动态数据库凭据 → 加密即服务。',code:'vault kv put secret/db db_user=app db_pass=xxx\nvault kv get secret/db\n# 应用侧：Secret 挂载 / 云 KMS 注入',tags:['安全','密钥']},
+{id:'m9-6',mod:'自动化运维进阶',title:'自愈与 Runbook 自动化',desc:'把高频故障的处理步骤写成 Runbook，再逐步自动化：告警触发 → 自动诊断（拉指标、日志、拓扑）→ 执行预批准的自愈动作 → 失败才升级到人。2026 年的趋势是 AI Agent 接管已知故障模式的自动处置，人只处理新问题。',code:null,tags:['自愈','趋势']}
+/* KNOWLEDGE_MORE */
+];
+
+const COMMANDS = [
+{cmd:'git log --oneline --graph --all -20',exp:'一屏看清提交历史与分支分叉，排障找 commit 最快。'},
+{cmd:'kubectl get pods -A -o wide',exp:'全集群列出 Pod 与所在节点，先确认「跑在哪、什么状态」。'},
+{cmd:'docker system df',exp:'查看镜像、容器、卷的磁盘占用，清理前的第一步。'},
+{cmd:'terraform plan',exp:'预演变更而不落地，部署前必须过的一关。'},
+{cmd:'ansible-playbook site.yml --check',exp:'干跑模式，验证 playbook 语法与影响面，不产生实际变更。'},
+{cmd:'curl -s -o /dev/null -w "%{http_code}" https://example.com',exp:'只看 HTTP 状态码，探活与巡检最常用的写法。'},
+{cmd:'kubectl rollout status deployment/api',exp:'等待并观察 Deployment 滚动更新的实时状态。'},
+{cmd:'kubectl logs -f deploy/api --tail=100',exp:'跟踪某服务最近 100 行日志，比翻文件快得多。'},
+{cmd:'kubectl port-forward svc/postgres 5432:5432',exp:'把集群内服务安全映射到本地，调试数据库/中间件利器。'},
+{cmd:'helm list -A',exp:'列出集群里所有命名空间的 Helm 发布，先摸清部署了什么。'},
+{cmd:'journalctl -u nginx -f -n 50',exp:'实时跟踪 systemd 服务日志，看最近 50 行，查服务挂掉原因。'},
+{cmd:'kubectl get events --sort-by=.metadata.creationTimestamp',exp:'按时间排序查看集群事件，Pod 起不来的原因通常藏在这里。'},
+{cmd:'kubectl top nodes && kubectl top pods -A',exp:'看节点与 Pod 的实时 CPU/内存，容量与突刺一屏掌握。'},
+{cmd:'docker build --pull --no-cache -t myapp:v1 .',exp:'强制拉取最新基础镜像并禁用缓存，基础镜像更新后必用。'},
+{cmd:'terraform state list',exp:'列出 Terraform 管理的全部资源，看 state 里到底有什么。'},
+{cmd:'kubectl describe pod <pod>',exp:'事件、镜像、挂载、状态一目了然，Pod 排障的万能入口。'},
+{cmd:'kubectl scale deployment/api --replicas=3',exp:'手动扩缩容，压测或应急时临时调整副本数。'},
+{cmd:'git cherry-pick <commit>',exp:'把某个提交挑到当前分支，热修复跨分支搬运的标准动作。'},
+{cmd:'ss -tlnp',exp:'列出监听端口与对应进程，端口冲突排查首选。'},
+{cmd:'kubectl auth can-i create deployments',exp:'快速验证当前身份对某资源的操作权限，RBAC 排障好帮手。'},
+{cmd:'kubectl exec -it <pod> -- sh',exp:'进入容器内排查，注意生产环境优先看日志而非改现场。'}
+];
+/* ===== 资讯数据 ===== */
+const NEWS_CATS = [
+  {key:'release', name:'发布与更新'},
+  {key:'ai',      name:'AI 与自动化运维'},
+  {key:'security',name:'安全与韧性'},
+  {key:'trend',   name:'趋势观察'}
+];
+const NEWS = [
+/* --- 发布与更新 --- */
+{cat:'release',date:'2026-10-30',title:'GitHub Universe 2026：Agentic Workflows 与 Actions lockfiles 全面上线',desc:'GitHub 将产品叙事升级为「agentic software delivery system」：Agentic Workflows 转 GA（代理工作流编译为 Actions 并带分层护栏）；Actions 工作流依赖锁文件（lockfiles）GA，可用 gh actions-lock 生成并策略强制；托管 Runner 开始多云调度，部分 Linux 作业可运行在 AWS；Copilot Automations、Agent Merge、Copilot approvals 等相继可用。Actions 日均执行已达 1.24 亿个任务。',src:'DEV Community',url:'https://dev.to/pwd9000/github-universe-2026-what-devops-engineers-need-to-know-1ap9',tags:['GitHub Actions','Agentic','供应链']},
+{cat:'release',date:'2026-10-06',title:'GitOps with Argo CD 扩展在 AKS 正式 GA',desc:'微软宣布 Azure 托管版 Argo CD 正式可用：保留上游 Argo CD 全部能力（ApplicationSets、多集群 Hub-and-spoke、HA），同时接入 Entra ID 单点登录、工作负载身份联邦（免长活密钥）、加固的 Azure Linux 镜像、自动补丁与 Azure Managed Prometheus 可观测性。可通过门户、CLI、Terraform 直接部署。',src:'Microsoft Community Hub',url:'https://techcommunity.microsoft.com/blog/azurearcblog/gitops-with-argo-cd-extension-for-aks-is-now-generally-available/4562231',tags:['GitOps','Argo CD','AKS']},
+{cat:'release',date:'2026-10-21',title:'Cilium 1.20：扩展 Gateway API、开放 eBPF 数据面',desc:'Cilium 1.20 发布：更完整的 Kubernetes Gateway API 支持、可扩展的 eBPF datapath、sidecarless 双向 TLS 继续推进，并让新版 netkit 网络设备更容易在不同内核版本的集群中引入。网络与安全能力继续下沉到内核层。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/',tags:['Cilium','eBPF','网络']},
+{cat:'release',date:'2026-10-20',title:'GitHub Actions Runner Controller 0.15.0：面向大规模可靠性',desc:'在 Kubernetes 上自托管 GitHub Actions Runner 的 ARC 0.15.0 发布，重点提升可靠性、可扩展性与可观测性，适合在 K8s 集群上跑大规模 CI 的团队升级。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/',tags:['GitHub Actions','自托管','K8s']},
+{cat:'release',date:'2026-10-13',title:'Backstage 1.55：软件模板任务可恢复',desc:'Backstage 1.55 为 Software Template 任务加入 opt-in 恢复能力（从崩溃或超时的最后一步续跑），同时移除一批废弃的 catalog/search/TechDocs API——升级前需要审阅配置与插件兼容性。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/12/',tags:['平台工程','Backstage']},
+{cat:'release',date:'2026-08-26',title:'Kubernetes v1.37 Garhwal：Memory QoS 转 Beta、Metrics API 稳定',desc:'K8s v1.37 共 67 项增强：Memory QoS 进阶 Beta 并默认启用；metrics.k8s.io API 正式稳定（kubectl top 的基础）；动态资源分配（DRA）扩展资源支持 GA；工作负载感知调度（WAS）继续演进。同时 Gateway API 1.6 让 TCPRoute/UDPRoute 进入标准版。',src:'Kubernetes 博客',url:'https://kubernetes.io/zh-cn/blog/',tags:['Kubernetes','v1.37','Gateway API']},
+{cat:'release',date:'2026-10-29',title:'IBM Automation 2.0：深化集成、统一界面',desc:'IBM 本周更新 IT 自动化产品组合，加深产品间集成并统一 UI，目标是让跨产品的自动化流程（事件→诊断→修复）少一些割裂，多一些开箱即用的编排。',src:'TechTarget',url:'https://www.techtarget.com/news/ibm-automation-20-will-tighten-integrations-unify-ui/873250/',tags:['IBM','自动化平台']},
+
+/* --- AI 与自动化运维 --- */
+{cat:'ai',date:'2026-10-14',title:'AWS DevOps Agent：新增四个区域，可对接 Microsoft Teams',desc:'AWS DevOps Agent 本周扩展至美国东部（俄亥俄）、首尔、巴黎、斯德哥尔摩四个新区域；支持连接 Microsoft Teams 接收单向通知并把调查卡片发布到频道；新增调查评审、按需用量指标（CloudWatch）等能力。',src:'AWS 文档',url:'https://docs.aws.amazon.com/zh_cn/devopsagent/latest/userguide/whats-new.html',tags:['AWS','Agent','调查']},
+{cat:'ai',date:'2026-10-26',title:'Terraform 进入 Agentic 时代：基础设施生命周期管理',desc:'IBM 发文阐述 Terraform 在智能体时代的位置：Terraform 为「智能体化基础设施生命周期管理」提供基础，从基础设施自动化走向自主基础设施——人类与 AI Agent 都能在安全护栏下大规模操作。',src:'IBM',url:'https://www.ibm.com/new/announcements/terraform-advances-infrastructure-lifecycle-management-for-the-agentic-era?lnk=hprc3au',tags:['Terraform','IaC','Agent']},
+{cat:'ai',date:'2026-10-13',title:'Octopus Deploy 推出远程 MCP：零安装的 Agentic 部署入口',desc:'Octopus Deploy 内置远程 MCP 服务器，暴露零安装的 /mcp HTTP 端点，覆盖导航、部署问答、发布操作、诊断、审计报告与租户配置检查六大能力域，让 AI 代理直接驱动部署生命周期；治理路线图包括作用域 API Key、OAuth 与强化审计日志。',src:'The Futurum Group',url:'https://futurumgroup.com/insights/octopus-deploys-remote-mcp-removes-the-last-excuse-not-to-go-agentic/',tags:['MCP','部署','Agent']},
+{cat:'ai',date:'2026-10-18',title:'AWS 预览 Well-Architected Agent：自动审计云环境',desc:'AWS 发布 Well-Architected Agent 预览：自动对照 Well-Architected 最佳实践分析环境，就成本、安全、性能、可靠性给出优先级建议，还能建议修复步骤并在部署前审查基础设施即代码。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/4/',tags:['AWS','架构','审查']},
+{cat:'ai',date:'2026-10-16',title:'Grafana 用 SLO 与错误预算衡量 AI Agent 行为',desc:'Grafana Labs 提议把成熟的可靠性工程方法用到新问题上：用 SLO 与错误预算度量 AI Agent 是否「表现良好」。对正在把自动化/AI 引入生产流程的团队，这是个值得抄的思路——给代理定可量化的行为目标。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/',tags:['SLO','AI Agent','可观测性']},
+
+/* --- 安全与韧性 --- */
+{cat:'security',date:'2026-10-21',title:'eMudhra 中间 CA 私钥泄露：低熵导致的证书伪造风险',desc:'八张 eMudhra 中间 CA 证书私钥因熵不足而泄露（并非已知入侵），攻击者可伪造任意站点的证书。浏览器已通过吊销列表封禁，但其他软件需移除 emSign ECC G3 根证书；未修补系统仍暴露在伪造证书（含 mTLS）风险下。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/12/',tags:['证书','供应链','安全']},
+{cat:'security',date:'2026-10-21',title:'Netflix：用工作负载证明桥接 AWS IAM 与内部身份',desc:'Netflix 为 Amazon EMR 上的 Spark 作业构建工作负载证明机制：AWS IAM 身份 + 来自控制面的签名声明，签发短期内部 X.509 证书，让托管计算负载无需直接注入凭据即可认证内部服务。短活凭据 + 零注入是当前身份安全的主流方向。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/',tags:['身份安全','IAM','短活凭据']},
+{cat:'security',date:'2026-10-16',title:'Chainguard 推出安全工作区，专门管控 AI 编码代理',desc:'Chainguard 发布两个 Beta 产品：Workspaces 基于加固的 microVM 提供远程开发环境，Checks 把持续集成检查前移到开发循环内——面向「开发者与 AI Agent 写的代码」做安全运行与测试，供应链安全开始覆盖 AI 生成代码。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/',tags:['供应链','AI 代码','安全']},
+
+/* --- 趋势观察 --- */
+{cat:'trend',date:'2026-10-30',title:'GitOps vs 传统 CI/CD：2026 怎么选',desc:'传统 CI/CD 由流水线把部署「推」向环境；GitOps 由运行在环境侧的 operator 从 Git「拉」期望状态并持续对账。GitOps 不替代 CI（仍需 CI 构建、测试、扫描、发布镜像），最适合多集群、微服务、受监管审计场景；简单应用与 VM 上传统流水线依然合理。多数团队实际是 CI + GitOps 混合。',src:'DEV Community',url:'https://dev.to/softverseadmin/gitops-vs-traditional-cicd-in-2026-differences-examples-and-which-one-to-choose-i9e',tags:['GitOps','CI/CD','选型']},
+{cat:'trend',date:'2026-08-25',title:'SRE 与平台工程 2026 报告：AI 成为观测对象与工具',desc:'Dynatrace 调研显示：AI 工作负载监控已成为 SRE 第一大用例（58%），67% 认为 AI 能力是最重要的可观测性平台能力；89% 的组织使用 SLO，74% 的平台工程团队提供自服务可观测性看板；约半数团队仍受困于数据源碎片化。',src:'Dynatrace',url:'https://www.dynatrace.com/news/blog/sre-best-practices-platform-engineering-trends/',tags:['SRE','平台工程','报告']},
+{cat:'trend',date:'2026-10-23',title:'OpenTelemetry 三大信号全部稳定 + 生产级洞察新动向',desc:'OTel 已成为可观测性事实标准：traces、metrics、logs 三大信号全部稳定，自动埋点代理生产就绪，eBPF 采集（Beyla、Hubble）无需改应用即可拿到内核级遥测。同期 Cloudflare 为生产 Workers 引入按需 CPU/内存剖析，用交互式火焰图排查生产瓶颈。',src:'InfoQ',url:'https://www.infoq.com/Devops/news/',tags:['OpenTelemetry','可观测性','eBPF']}
+];
+
+const TIPS = [
+{title:'给 Actions 依赖上锁',desc:'用 gh actions-lock 生成 .github/workflows/actions.lock（覆盖传递依赖），Dependabot 会在更新 action 时同步锁文件；管理员可启用 Require lockfile 策略强制落地。锁文件防的是「意外变更」，不是恶意代码，上锁前先审依赖。'},
+{title:'多云 Runner 的白名单要跟上',desc:'GitHub 托管 Runner 开始多云调度，部分 Linux 作业会跑在 AWS 上。如果你依赖 IP allowlist 或 Entra Conditional Access，改从 GitHub meta API 拉取 actions IP 范围，而不是写死 Azure 段。'},
+{title:'Metrics API 稳定意味着什么',desc:'Kubernetes v1.37 里 metrics.k8s.io 转稳定版——kubectl top、HPA 依赖的这套资源指标 API 有了长期兼容承诺；升级集群后先验证自定义指标适配器是否仍兼容。'},
+{title:'给自动化行为定 SLO',desc:'Grafana 用 SLO 与错误预算衡量 AI Agent 的行为质量。同样的思路适用于任何自动化：为「自动修复成功率」「误告警率」定义指标与预算，超预算就暂停放量。'},
+{title:'GitOps 的纪律比 YAML 重要',desc:'「只是把 YAML 放进 Git」不是 GitOps——分支保护、评审、持续对账、禁止手工改生产，纪律才是核心。任何能直接提交到发布分支的人都可能让安全变得更糟。'},
+{title:'密钥不进镜像',desc:'镜像里写死密码 = 所有拉取该镜像的人都拿到密码。改用 Secret 挂载、Vault 动态凭据或云 KMS 注入；配合短活凭据，把泄露半径压到最小。'}
+];
+/* ===== 应用逻辑 ===== */
+(function(){
+  'use strict';
+  var LS_KEY = 'ops_academy_done_v1';
+
+  /* ---------- 工具 ---------- */
+  function el(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function seedOf(date){
+    var y=date.getFullYear(), m=date.getMonth()+1, d=date.getDate();
+    return (y*10000 + m*100 + d);
+  }
+
+  /* ---------- 每日自动更新 ---------- */
+  var today = new Date();
+  var baseSeed = seedOf(today);
+  var dailyOffset = 0;
+  function dailyKnow(){ return KNOWLEDGE[(baseSeed + dailyOffset) % KNOWLEDGE.length]; }
+  function dailyCmd(){ return COMMANDS[(baseSeed + dailyOffset) % COMMANDS.length]; }
+
+  function renderToday(){
+    var k = dailyKnow(), c = dailyCmd();
+    el('todayDate').textContent = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    var tagBox = el('todayTags'); tagBox.innerHTML='';
+    (k.tags||[]).forEach(function(t){ var s=document.createElement('span'); s.className='tag-pill'; s.textContent=t; tagBox.appendChild(s); });
+    el('todayTitle').textContent = k.title;
+    el('todayDesc').textContent = k.desc;
+    var code = el('todayCode');
+    if(k.code){ code.style.display='block'; code.textContent = k.code; } else { code.style.display='none'; code.textContent=''; }
+    el('todayCmd').textContent = c.cmd;
+    el('todayCmdExp').textContent = c.exp;
+    var done = loadDone();
+    var btn = el('btnMarkToday');
+    if(done.has(k.id)){
+      btn.innerHTML = svgCheck()+' 今日已学 ✓';
+      btn.classList.add('done');
+    } else {
+      btn.innerHTML = svgCheck()+' 标记今日已学';
+      btn.classList.remove('done');
+    }
+  }
+
+  function svgCheck(){ return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'; }
+
+  /* ---------- 已学进度 ---------- */
+  function loadDone(){
+    try { return new Set(JSON.parse(localStorage.getItem(LS_KEY)||'[]')); }
+    catch(e){ return new Set(); }
+  }
+  function saveDone(set){ localStorage.setItem(LS_KEY, JSON.stringify(Array.from(set))); }
+
+  function renderProgress(){
+    var done = loadDone();
+    var total = KNOWLEDGE.length;
+    el('progressText').textContent = done.size+' / '+total;
+    el('progressBar').style.width = (total? (done.size/total*100):0)+'%';
+    el('statItems').textContent = total;
+    // 各模块进度
+    document.querySelectorAll('.mod-card').forEach(function(card){
+      var mod = card.dataset.mod;
+      var items = KNOWLEDGE.filter(function(k){ return k.mod===mod; });
+      var doneN = items.filter(function(k){ return done.has(k.id); }).length;
+      var p = card.querySelector('.mod-prog');
+      if(p) p.textContent = doneN+'/'+items.length;
+      card.querySelectorAll('.learn-toggle').forEach(function(tg){
+        var id = tg.dataset.id;
+        tg.classList.toggle('done', done.has(id));
+        tg.title = done.has(id) ? '已学，点击取消' : '标记为已学';
+      });
+    });
+  }
+  function toggleDone(id){
+    var done = loadDone();
+    if(done.has(id)){ done.delete(id); } else { done.add(id); }
+    saveDone(done);
+    renderProgress();
+    renderToday();
+  }
+
+  /* ---------- 知识地图 ---------- */
+  var openMods = {};
+  function renderMap(filter){
+    var q = (filter||'').trim().toLowerCase();
+    var grid = el('mapGrid');
+    grid.innerHTML = '';
+    var totalShown = 0;
+    MODULES.forEach(function(mod, idx){
+      var items = KNOWLEDGE.filter(function(k){ return k.mod===mod; });
+      var matched = items;
+      if(q){
+        matched = items.filter(function(k){
+          return k.title.toLowerCase().indexOf(q)>=0 || k.desc.toLowerCase().indexOf(q)>=0 || (k.tags||[]).join(' ').toLowerCase().indexOf(q)>=0;
+        });
+      }
+      totalShown += matched.length;
+      var card = document.createElement('article');
+      card.className = 'mod-card' + ((q && matched.length) || openMods[mod] ? ' open' : '');
+      card.dataset.mod = mod;
+      card.innerHTML =
+        '<div class="mod-head">'+
+          '<div class="mod-ico">'+modIcon(idx)+'</div>'+
+          '<div class="mod-title"><b>'+esc(mod)+'</b><span>'+items.length+' 个知识点</span></div>'+
+          '<span class="mod-prog">—</span>'+
+          '<span class="mod-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>'+
+        '</div>'+
+        '<div class="mod-body"><ul class="know-list">'+matched.map(function(k){
+          return '<li>'+
+            '<div style="flex:1;min-width:0">'+
+              '<div class="k-title">'+esc(k.title)+'</div>'+
+              '<div class="k-desc">'+esc(k.desc)+'</div>'+
+              (k.code? '<div class="code-block" style="margin-top:8px">'+esc(k.code)+'</div>':'')+
+              '<div class="k-tags">'+(k.tags||[]).map(function(t){ return '<span class="tag-pill">'+esc(t)+'</span>'; }).join('')+'</div>'+
+            '</div>'+
+            '<button class="learn-toggle" data-id="'+k.id+'" title="标记为已学">'+svgCheck()+'</button>'+
+          '</li>';
+        }).join('')+'</ul></div>';
+      if(q && !matched.length){ card.style.display='none'; }
+      grid.appendChild(card);
+    });
+    el('noResult').style.display = (q && totalShown===0) ? 'block' : 'none';
+    el('searchCount').textContent = q ? '匹配 '+totalShown+' 条' : '';
+    // 事件绑定
+    grid.querySelectorAll('.mod-head').forEach(function(hd){
+      hd.addEventListener('click', function(){
+        var card = hd.parentNode;
+        var mod = card.dataset.mod;
+        openMods[mod] = !openMods[mod];
+        card.classList.toggle('open', openMods[mod]);
+      });
+    });
+    grid.querySelectorAll('.learn-toggle').forEach(function(tg){
+      tg.addEventListener('click', function(e){
+        e.stopPropagation();
+        toggleDone(tg.dataset.id);
+      });
+    });
+    renderProgress();
+  }
+
+  function modIcon(idx){
+    var paths = [
+      '<path d="M3 3h18v18H3z" fill="none"/><path d="M8 9l3 3-3 3"/><path d="M13 15h4"/>',                                        // 文化/协作
+      '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l2.5 2.5"/>',                                                              // Git/时钟
+      '<path d="M4 5h16v14H4z"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 9.5L9.6 10.9"/><path d="M17.5 9.5L14.4 10.9"/>',    // CI/CD
+      '<path d="M2 13l4-8 4 8H2z"/><path d="M14 13l4-8 4 8h-8z"/><path d="M2 21h20"/><path d="M4 17h5"/><path d="M15 17h5"/>',     // 容器
+      '<path d="M12 2l8 4v12l-8 4-8-4V6z"/><path d="M12 22V12"/><path d="M12 12l8-6"/><path d="M12 12L4 6"/>',                    // K8s/六边形
+      '<path d="M4 6h16M4 12h16M4 18h16"/>',                                                                                       // IaC/代码
+      '<path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 6v6l4 2"/>',                                                  // 可观测/眼
+      '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>',                             // SRE/盾
+      '<path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>'                                                                               // 自动化/闪电
+    ];
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+paths[idx%paths.length]+'</svg>';
+  }
+
+  /* ---------- 资讯页 ---------- */
+  var UPDATE_DATE = '2026-10-31';
+  function weekNum(){
+    var start = new Date(2026, 9, 26); // 2026-10-26 周一（第1期基准）
+    var diff = Math.floor((Date.now() - start.getTime()) / 604800000);
+    return Math.max(1, diff + 1);
+  }
+  function renderNews(){
+    el('newsMeta').innerHTML =
+      '<span class="badge blue">第 '+weekNum()+' 期</span>'+
+      '<span>本期更新：'+UPDATE_DATE+'</span>'+
+      '<span class="sep">·</span><span>覆盖：GitHub · Kubernetes · AWS · Microsoft · CNCF 生态等</span>'+
+      '<span class="sep">·</span><span>每条附可追溯来源链接</span>';
+    var grid = el('newsGrid');
+    grid.innerHTML = '';
+    NEWS_CATS.forEach(function(cat){
+      var items = NEWS.filter(function(n){ return n.cat===cat.key; });
+      var block = document.createElement('section');
+      block.className = 'cat-block';
+      block.innerHTML =
+        '<div class="cat-head"><h2>'+esc(cat.name)+'</h2><span class="cnt">'+items.length+' 条</span></div>'+
+        '<div class="news-list">'+items.map(function(n){
+          return '<article class="news-item">'+
+            '<div class="n-top"><span class="n-date">'+n.date+'</span>'+
+            (n.tags||[]).map(function(t){ return '<span class="tag-pill">'+esc(t)+'</span>'; }).join('')+
+            '</div>'+
+            '<h3><a href="'+esc(n.url)+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></h3>'+
+            '<div class="n-desc">'+esc(n.desc)+'</div>'+
+            '<div class="n-src"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>来源：'+esc(n.src)+'</div>'+
+          '</article>';
+        }).join('')+'</div>';
+      grid.appendChild(block);
+    });
+    var tips = el('tipsGrid');
+    tips.innerHTML = TIPS.map(function(t){
+      return '<div class="tip-item">'+
+        '<div class="t-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 00-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0012 2z"/></svg></div>'+
+        '<div class="t-body"><b>'+esc(t.title)+'</b><p>'+esc(t.desc)+'</p></div>'+
+      '</div>';
+    }).join('');
+  }
+
+  /* ---------- 路由与事件 ---------- */
+  function route(){
+    var h = location.hash || '#/learn';
+    var v = h.indexOf('news')>=0 ? 'news' : 'learn';
+    document.querySelectorAll('.view').forEach(function(el){ el.classList.remove('active'); });
+    el('view-'+v).classList.add('active');
+    document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.toggle('active', t.dataset.view===v); });
+    el('navUpdateText').textContent = v==='learn' ? '每日自动更新' : ('每周更新 · 第'+weekNum()+'期');
+  }
+
+  el('btnMarkToday').addEventListener('click', function(){
+    var k = dailyKnow();
+    var done = loadDone();
+    if(done.has(k.id)){ done.delete(k.id); } else { done.add(k.id); }
+    saveDone(done);
+    renderToday();
+    renderProgress();
+  });
+  el('btnNextToday').addEventListener('click', function(){
+    dailyOffset++;
+    renderToday();
+  });
+  el('btnReset').addEventListener('click', function(){
+    if(window.confirm('确定要清空全部已学进度吗？此操作不可撤销。')){
+      localStorage.removeItem(LS_KEY);
+      renderToday();
+      renderProgress();
+    }
+  });
+  el('knowSearch').addEventListener('input', function(){ renderMap(this.value); });
+
+  document.querySelectorAll('.nav-tab').forEach(function(t){
+    t.addEventListener('click', function(e){
+      e.preventDefault();
+      location.hash = t.getAttribute('href');
+    });
+  });
+  window.addEventListener('hashchange', route);
+
+  /* ---------- 启动 ---------- */
+  el('statModules').textContent = MODULES.length;
+  el('footYear').textContent = '© ' + new Date().getFullYear();
+  renderToday();
+  renderMap('');
+  renderNews();
+  route();
+})();
+</script>
+</body>
+</html>
