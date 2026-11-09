@@ -330,6 +330,61 @@ table.cmp td{color:var(--muted)}
 .src-note a{color:var(--muted)}
 .src-note a:hover{color:var(--accent)}
 
+/* 指标条 */
+.arch-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:20px}
+.stat{border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);padding:11px 13px}
+.stat b{display:block;font-family:var(--mono);font-size:21px;font-weight:800;color:var(--text);line-height:1.2}
+.stat span{display:block;font-size:11.5px;color:var(--dim);margin-top:2px}
+
+/* 决策对比 */
+.duel{display:grid;grid-template-columns:1fr;gap:9px;margin-top:16px}
+.duel-side{border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);padding:14px 15px}
+.duel-side h4{font-size:13.5px;font-weight:800;margin-bottom:9px}
+.duel-side ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.duel-side li{font-size:12.5px;color:var(--muted);line-height:1.62;padding-left:13px;position:relative}
+.duel-side li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:1px;background:var(--dim)}
+.duel-side.pro{border-color:var(--accent-line)}
+.duel-side.pro h4{color:var(--accent)}
+.duel-side.pro li::before{background:var(--accent)}
+.duel-side.trap{border-color:rgba(229,104,90,.3)}
+.duel-side.trap h4{color:var(--red)}
+.duel-side.trap li::before{background:var(--red)}
+.duel-vs{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11.5px;letter-spacing:2px;color:var(--dim)}
+.duel-path{border-left:3px solid var(--accent);background:var(--accent-weak);padding:10px 13px;border-radius:0 8px 8px 0}
+.duel-path b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;color:var(--accent);margin-bottom:3px}
+.duel-path span{font-size:12.5px;color:var(--text);line-height:1.65}
+
+/* 速记 */
+.memo{margin-top:16px;border:1px dashed var(--border-strong);border-radius:var(--r-sm);background:var(--surface2);padding:12px 15px;display:flex;gap:11px;align-items:flex-start}
+.memo .m-k{flex:none;font-family:var(--mono);font-size:10.5px;letter-spacing:1.5px;color:var(--amber);padding-top:2px}
+.memo p{font-size:13px;color:var(--text);line-height:1.7}
+
+/* 小表 */
+.tbl-scroll{overflow-x:auto;margin-top:16px;border:1px solid var(--border);border-radius:var(--r-sm)}
+table.mini{width:100%;min-width:560px;border-collapse:collapse;table-layout:fixed;background:var(--surface)}
+table.mini th,table.mini td{padding:10px 12px;font-size:12.5px;line-height:1.65;text-align:left;vertical-align:top;border-bottom:1px solid var(--border);color:var(--muted)}
+table.mini thead th{background:var(--surface2);color:var(--text);font-weight:800}
+table.mini tbody tr:last-child td{border-bottom:none}
+table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weight:700}
+
+/* 产品线阶梯 */
+.ladder{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.ladder .lr{display:grid;grid-template-columns:64px 1fr;gap:11px;align-items:start;border:1px solid var(--border);border-radius:8px;background:var(--surface);padding:10px 12px}
+.ladder .lv{font-family:var(--mono);font-size:10.5px;letter-spacing:.5px;color:var(--dim);padding-top:3px}
+.ladder .lp{font-size:12.5px;color:var(--muted);line-height:1.65}
+.ladder .lp b{display:block;font-size:13px;color:var(--text);margin-bottom:1px}
+
+/* ADR */
+.adr{margin-top:14px;border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--r-sm);background:#0A1220;padding:14px 16px;font-family:var(--mono);font-size:11.5px;line-height:1.95;color:var(--muted);white-space:pre-wrap;overflow-wrap:break-word}
+
+@media (min-width:768px){
+  .arch-stats{grid-template-columns:repeat(5,1fr)}
+}
+@media (min-width:820px){
+  .duel{grid-template-columns:1fr 44px 1fr}
+  .duel-path{grid-column:1 / -1}
+}
+
 @media (min-width:768px){
   .arch-hero{grid-template-columns:1.35fr .65fr}
   .cap-grid{grid-template-columns:repeat(2,1fr)}
@@ -541,6 +596,14 @@ table.cmp td{color:var(--muted)}
       </div>
     </div>
 
+    <div class="arch-stats">
+      <div class="stat"><b>5</b><span>架构分层</span></div>
+      <div class="stat"><b>4</b><span>关键决策</span></div>
+      <div class="stat"><b>2</b><span>套装平台</span></div>
+      <div class="stat"><b>11</b><span>对比维度</span></div>
+      <div class="stat"><b>8</b><span>选型问题</span></div>
+    </div>
+
     <section class="arch-block">
       <div class="kicker">01 · Five Layers</div>
       <h2 class="section-title">企业架构五层：先确认在谈哪一层</h2>
@@ -553,6 +616,24 @@ table.cmp td{color:var(--muted)}
         <div class="layer ly-dim"><div class="ly-name">基础设施<em>Infrastructure</em></div><div class="ly-body"><span class="chip">云 / 机房</span><span class="chip">网络</span><span class="chip">算力与存储</span><span class="chip">安全底座</span></div></div>
       </div>
       <div class="src-note">分层沿用企业架构通行框架（业务 / 应用 / 数据 / 技术 / 基础设施），用于定位问题归属，不替代具体方法论。</div>
+
+      <p class="section-sub" style="margin-top:26px">把这张图当排查起点：先定位在哪一层，再问为什么。</p>
+      <div class="tbl-scroll">
+        <table class="mini">
+          <colgroup><col style="width:24%"><col style="width:22%"><col style="width:54%"></colgroup>
+          <thead><tr><th>症状</th><th>先看哪一层</th><th>典型原因</th></tr></thead>
+          <tbody>
+            <tr><td>整站打不开</td><td>接入层</td><td>网关挂掉、证书过期、负载均衡配置错误</td></tr>
+            <tr><td>部分接口 500</td><td>接入层 / 应用架构</td><td>限流规则误伤、参数校验失败、下游调用失败</td></tr>
+            <tr><td>业务规则算错</td><td>应用架构 / 领域层</td><td>模型边界不清、状态机漏分支、并发更新互相覆盖</td></tr>
+            <tr><td>偶发慢查询</td><td>数据架构</td><td>缓存失效、缺索引、慢 SQL、大表全扫</td></tr>
+            <tr><td>配置改了不生效</td><td>技术架构（配置中心）</td><td>未下发、灰度未覆盖到实例、本地兜底配置生效</td></tr>
+            <tr><td>跨机房随机超时</td><td>基础设施</td><td>网络抖动、磁盘 IO 饱和、资源配额不足</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="memo"><span class="m-k">速记</span><p>分层价值在"职责单一、依赖单向"；跨层直达（应用层绕过领域层直连数据库）就是架构腐化的开始。</p></div>
     </section>
 
     <section class="arch-block">
@@ -618,10 +699,157 @@ table.cmp td{color:var(--muted)}
         <div class="evo"><b>云原生</b><span>容器 + 编排 + 声明式交付 + 可观测</span></div>
       </div>
       <div class="src-note">图中层级为通用示意，不代表任何具体厂商产品。</div>
+
+      <p class="section-sub" style="margin-top:26px">图上每个组件都值得追问一句：它挂了会怎样、靠什么兜住。</p>
+      <div class="tbl-scroll">
+        <table class="mini">
+          <colgroup><col style="width:20%"><col style="width:40%"><col style="width:40%"></colgroup>
+          <thead><tr><th>组件</th><th>失效后果</th><th>防御方式</th></tr></thead>
+          <tbody>
+            <tr><td>注册中心</td><td>服务发现失败，新实例无法注册上线</td><td>集群部署 + 客户端缓存服务列表</td></tr>
+            <tr><td>配置中心</td><td>错误配置下发，回滚困难</td><td>灰度下发 + 本地兜底快照</td></tr>
+            <tr><td>消息队列</td><td>异步链路停滞，消费积压延迟</td><td>多副本 + 消费限流 + Lag 监控告警</td></tr>
+            <tr><td>API 网关</td><td>全部流量入口不可用</td><td>多实例多可用区 + 限流兜底</td></tr>
+            <tr><td>链路追踪</td><td>故障只能靠猜，定界时间翻倍</td><td>采样兜底 + trace_id 贯穿日志</td></tr>
+            <tr><td>数据库主库</td><td>写入全停</td><td>主从切换 + 只读降级 + 连接池隔离</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="memo"><span class="m-k">速记</span><p>注册 / 配置 / 网关解决「互相找到」，熔断限流解决「故障不扩散」，链路追踪解决「卡在哪」——缺哪样，微服务就只是拆开的单体。</p></div>
     </section>
 
     <section class="arch-block">
-      <div class="kicker">03 · Yonyou / iuap</div>
+      <div class="kicker">03 · Trade-offs</div>
+      <h2 class="section-title">四个最常见的架构决策：都是取舍，不是对错</h2>
+      <p class="section-sub">这几个问题在评审会上出现频率最高。先把两边的代价摊开，再谈选哪边。</p>
+
+      <h3 style="font-size:15px;font-weight:800;margin-top:24px">决策一 · 单体还是微服务？</h3>
+      <div class="duel">
+        <div class="duel-side">
+          <h4>单体</h4>
+          <ul>
+            <li>开发、调试、部署都简单</li>
+            <li>事务天然一致，不用处理分布式事务</li>
+            <li>小团队效率最高</li>
+            <li>发布互相阻塞，一处改动全站回归</li>
+          </ul>
+        </div>
+        <div class="duel-vs">VS</div>
+        <div class="duel-side pro">
+          <h4>微服务</h4>
+          <ul>
+            <li>独立部署、独立扩容</li>
+            <li>故障隔离，技术栈可异构</li>
+            <li>按业务域分工，团队可并行</li>
+            <li>付出分布式事务、链路追踪与运维成本</li>
+          </ul>
+        </div>
+        <div class="duel-path"><b>务实路径</b><span>先做模块化单体，把边界划清；等发布冲突或扩容压力真实出现，再按痛点逐块拆。微服务解决的是组织协作与发布隔离，不是性能问题。</span></div>
+      </div>
+
+      <h3 style="font-size:15px;font-weight:800;margin-top:26px">决策二 · 同步调用还是消息队列？</h3>
+      <div class="duel">
+        <div class="duel-side">
+          <h4>同步 RPC</h4>
+          <ul>
+            <li>链路直观，出问题好定位</li>
+            <li>强一致，结果立即可见</li>
+            <li>下游抖动会顺着调用链拖垮上游</li>
+            <li>高峰期只能靠加机器硬扛</li>
+          </ul>
+        </div>
+        <div class="duel-vs">VS</div>
+        <div class="duel-side pro">
+          <h4>异步消息</h4>
+          <ul>
+            <li>削峰填谷，把瞬时洪峰摊到时间维度</li>
+            <li>上下游解耦，下游可独立扩容重试</li>
+            <li>要处理幂等、消息丢失与积压</li>
+            <li>链路变长，排查依赖 Lag 与追踪</li>
+          </ul>
+        </div>
+        <div class="duel-path"><b>务实路径</b><span>必须立刻拿到结果且强一致的走同步；可以后置、可重试、可接受最终一致的走消息。异步是用「稍后到」换「扛得住」。</span></div>
+      </div>
+
+      <h3 style="font-size:15px;font-weight:800;margin-top:26px">决策三 · 数据层怎么扛住量？</h3>
+      <div class="ladder">
+        <div class="lr"><div class="lv">STEP 1</div><div class="lp"><b>慢 SQL 与索引治理</b>先把明显的坏查询修掉，成本最低、收益最直接，多数系统做到这一步就够了</div></div>
+        <div class="lr"><div class="lv">STEP 2</div><div class="lp"><b>读写分离</b>报表与只读流量切到从库，但要接受主从复制延迟</div></div>
+        <div class="lr"><div class="lv">STEP 3</div><div class="lp"><b>缓存前置</b>热点数据前移，同时处理缓存击穿、穿透与一致性</div></div>
+        <div class="lr"><div class="lv">STEP 4</div><div class="lp"><b>分库分表</b>最后一步：分片键选错，之后每次查询都要跨片聚合</div></div>
+      </div>
+      <div class="duel-path" style="margin-top:10px"><b>务实路径</b><span>按顺序上，每步都能独立回退。跳过前两步直接分片，是把可逆的问题做成不可逆。</span></div>
+
+      <h3 style="font-size:15px;font-weight:800;margin-top:26px">决策四 · 高可用做到什么程度？</h3>
+      <div class="duel">
+        <div class="duel-side">
+          <h4>单机房 + 定期备份</h4>
+          <ul>
+            <li>成本最低，架构最简单</li>
+            <li>RTO 小时级，RPO 可能丢一段时间的数据</li>
+            <li>机房级故障直接停摆</li>
+          </ul>
+        </div>
+        <div class="duel-vs">VS</div>
+        <div class="duel-side pro">
+          <h4>同城双活 + 异地灾备</h4>
+          <ul>
+            <li>RPO 接近 0，RTO 分钟级</li>
+            <li>能扛机房级、区域级故障</li>
+            <li>成本翻倍，且要真实演练切换</li>
+          </ul>
+        </div>
+        <div class="duel-path"><b>务实路径</b><span>先定 RTO / RPO 再选方案。普通业务同城双活已经够；金融级、关键基础设施才谈两地三中心。可用性是花钱买的，且永远不到 100%。</span></div>
+      </div>
+
+      <div class="memo"><span class="m-k">速记</span><p>架构决策 = 用新复杂度换掉旧瓶颈。先写清"换什么、付出什么"，再写"什么前提下这个决策会失效"。</p></div>
+    </section>
+
+    <section class="arch-block">
+      <div class="kicker">04 · Decision Method</div>
+      <h2 class="section-title">怎么把架构决策讲清楚：四视角 + 一份记录</h2>
+      <p class="section-sub">同样的方案，讲不清权衡就只是个人偏好。两个工具够用：四个视角过一遍，重要决策写一页 ADR。</p>
+
+      <div class="tbl-scroll">
+        <table class="mini">
+          <colgroup><col style="width:18%"><col style="width:34%"><col style="width:48%"></colgroup>
+          <thead><tr><th>视角</th><th>回答的问题</th><th>典型权衡</th></tr></thead>
+          <tbody>
+            <tr><td>可用性</td><td>坏了会怎样，多久能恢复</td><td>冗余换成本；先定 RTO / RPO 目标</td></tr>
+            <tr><td>可扩展性</td><td>量涨十倍还撑得住吗</td><td>有状态 vs 无状态；先读写分离再分库分表</td></tr>
+            <tr><td>一致性</td><td>数据可以不一致多久</td><td>强一致牺牲时延，最终一致牺牲即时可见</td></tr>
+            <tr><td>成本与复杂度</td><td>谁维护，值不值</td><td>每个组件都是学习 + 运维 + 升级的长期投入</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="section-sub" style="margin-top:26px">把决策写成可追溯的一页，比会后口头传达更可靠。</p>
+      <div class="adr"># ADR-012：订单库引入读写分离
+状态：已接受（2026-10）
+背景：大促峰值报表与交易争抢主库，P99 延迟超 SLO 3 倍
+决策：CDC 同步只读副本，报表流量全量切至从库
+理由：OLTP / OLAP 分离改造成本最低，双写方案一致性风险不可控
+代价：接受秒级复制延迟；新增一条 CDC 链路的运维成本
+替代：双写（否：一致性难保证）/ 直接建数仓（缓：周期太长）</div>
+
+      <div class="tbl-scroll">
+        <table class="mini">
+          <colgroup><col style="width:52%"><col style="width:48%"></colgroup>
+          <thead><tr><th>把观点翻译成架构语言的句式</th><th>用在哪</th></tr></thead>
+          <tbody>
+            <tr><td>「这个方案在 X 视角是改进，在 Y 视角是退步」</td><td>把"好不好"变成"在哪个维度上更好"</td></tr>
+            <tr><td>「我们用 A 的复杂度换 B 的收益，值不值因为……」</td><td>把交易对价说清楚，不只讲收益</td></tr>
+            <tr><td>「如果前提 Q 不成立，这个决策需要重评」</td><td>给决策标注失效条件</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="memo"><span class="m-k">速记</span><p>四视角过一遍：可用性、可扩展性、一致性、成本复杂度。重要决策写 ADR——背景、决策、理由、代价、替代方案，半年后不用重新吵。</p></div>
+    </section>
+
+    <section class="arch-block">
+      <div class="kicker">05 · Yonyou / iuap</div>
       <h2 class="section-title">用友：YonBIP 的 iuap 技术平台</h2>
       <p class="section-sub">用友把技术能力收敛在 iuap 平台：技术平台、低代码开发平台、连接集成平台、数据中台、智能中台、业务中台。业务应用长在这套底座上，二次开发也走同一套模型与运行框架。</p>
       <div class="layer-stack">
@@ -639,12 +867,23 @@ table.cmp td{color:var(--muted)}
         <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div><div><b>多端编译</b><p>一份应用模型可编译生成 PC 端、移动端应用与小程序，减少多端重复开发。</p></div></div>
         <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><div><b>连接与集成引擎</b><p>连接器共建，运行引擎提供协议转换、流程引擎、脚本引擎、数据转换与监控分析，官方口径支持 1000 并发量。</p></div></div>
         <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 16H5a5 5 0 0 1-1-9.9"/></svg></div><div><b>云原生工程体系</b><p>YonCTP 基于 K8s、Docker、ServiceMesh 做容器化管理、微服务治理与 DevOps；YMS 云中间件统一技术栈、适配跨云多云。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><div><b>连接集成</b><p>YonLinker 承担连接集成：API 网关与服务总线能力，面向混合云场景；配套连接器与 OpenAPI 对外开放。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="4"/></svg></div><div><b>AI 与数据</b><p>智能中台叠加 YonGPT 企业服务大模型，把智能能力嵌进业务场景；数据中台负责数据资产与口径统一。</p></div></div>
       </div>
+
+      <p class="section-sub" style="margin-top:26px">iuap 之上按企业规模分产品线，选型第一步是先确认落在哪一档。</p>
+      <div class="ladder">
+        <div class="lr"><div class="lv">小微</div><div class="lp"><b>YonSuite / U8 Cloud</b>成长型与小微企业，SaaS 全场景套件，与 BIP 同源代码基座</div></div>
+        <div class="lr"><div class="lv">中型</div><div class="lp"><b>U9 cloud（制造业）/ NC Cloud</b>中型企业与制造业，按行业方案落地，平台能力与 iuap 衔接</div></div>
+        <div class="lr"><div class="lv">大型</div><div class="lp"><b>YonBIP</b>大型与超大型集团，覆盖财务、人力、供应链、制造等多个领域云，底座仍是 iuap</div></div>
+      </div>
+
+      <div class="memo"><span class="m-k">速记</span><p>YonBuilder 的关键不是拖拽，而是元数据：模型即应用，二开沉淀在模型里，升级时才有机会不被覆盖。</p></div>
       <div class="src-note">来源：<a href="https://www.yonyou.com/subject/gd-iuap">用友 iuap 平台组成</a> · <a href="https://www.yonyou.com/subject/iuap?zixun=0&withYonyouMenu">YonCTP 云技术平台</a> · <a href="https://yonyou.com/news/1991">YMS 云中间件与多云适配</a> · <a href="https://developer.yonyou.com/docs/Others/NoviceMap-Developer-YonBIP">YonBuilder 开发文档</a> · <a href="https://iuap.yonyou.com/iuap/product/yonbip.html">函数式低代码扩展</a> · <a href="https://developer.yonyou.com/product/integrated/bus">集成运行引擎</a></div>
     </section>
 
     <section class="arch-block">
-      <div class="kicker">04 · Kingdee / Cosmic</div>
+      <div class="kicker">06 · Kingdee / Cosmic</div>
       <h2 class="section-title">金蝶云·苍穹：KDDM 建模内核 + 云原生底座</h2>
       <p class="section-sub">苍穹把自己定位为企业级 PaaS：上层用 KDDM 第四代动态领域模型承载业务建模，下层是容器化、微服务、K8s 编排的云原生技术底座，配套流程服务、开放集成与 AI 能力。</p>
       <div class="layer-stack">
@@ -660,35 +899,64 @@ table.cmp td{color:var(--muted)}
         <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9L12 2z"/><path d="M12 12l8-5.5"/><path d="M12 12v8"/><path d="M12 12L4 6.5"/></svg></div><div><b>云原生底座</b><p>容器化、微服务、K8s 编排与 DevOps；官方对核心架构的口径是"微服务 + Docker 容器 + 分布式数据库"，支持弹性伸缩与故障自愈。</p></div></div>
         <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div><div><b>流程与 AI 服务</b><p>流程服务云按 BPMN 2.0 规范做流程建模与运行；Agent 开发平台提供多智能体构建能力。底层由 Apusic AAS 应用服务器（Jakarta EE 8/9）与 ADCC 配置中心（for Nacos）支撑。</p></div></div>
       </div>
+
+      <p class="section-sub" style="margin-top:26px">苍穹是 PaaS，产品线是长在它上面的应用：同一套模型能力，按企业规模分层。</p>
+      <div class="ladder">
+        <div class="lr"><div class="lv">小微</div><div class="lp"><b>金蝶云·星辰</b>小微企业，业财一体的轻量场景</div></div>
+        <div class="lr"><div class="lv">中型</div><div class="lp"><b>金蝶云·星空</b>成长型与中型企业，制造与供应链方案成熟</div></div>
+        <div class="lr"><div class="lv">大型</div><div class="lp"><b>金蝶云·星瀚</b>大型与集团企业，OA、财务、人力等场景跑在苍穹 PaaS 之上</div></div>
+      </div>
+
+      <div class="memo"><span class="m-k">速记</span><p>KDDM 把业务对象做成模型、运行期加载，所以苍穹能承载复杂个性化定制；定制沉淀在模型里，而不是散落在源码里。</p></div>
       <div class="src-note">来源：<a href="https://m.kingdee.com/products/cosmic_development_services.html">KDDM 第四代动态领域模型</a> · <a href="https://www.kingdee.com/resources/articles/1526632667744049569">苍穹云原生架构</a> · <a href="https://m.kingdee.com/case/39269">核心架构：微服务 + Docker + 分布式数据库</a> · <a href="https://m.kingdee.com/products/cosmic_process_service.html">流程服务云（BPMN 2.0）</a> · <a href="https://m.kingdee.com/products/cosmic_ai_services.html">Agent 开发平台</a> · <a href="https://www.apusic.com/list-117.html">Apusic AAS</a> · <a href="https://apusic.com/list-518.html">ADCC 配置中心</a></div>
     </section>
 
     <section class="arch-block">
-      <div class="kicker">05 · Side by Side</div>
-      <h2 class="section-title">两家平台横向对比：看能力落在哪一层</h2>
+      <div class="kicker">07 · Side by Side</div>
+      <h2 class="section-title">两家平台横向对比：11 个维度对齐</h2>
       <p class="section-sub">对比不解决"谁更好"，只解决"差异在哪一层"。下表按架构维度对齐，便于把差异映射回你自己的问题。</p>
       <div class="cmp-scroll">
         <table class="cmp">
-          <colgroup><col style="width:15%"><col style="width:42.5%"><col style="width:42.5%"></colgroup>
+          <colgroup><col style="width:19%"><col style="width:40.5%"><col style="width:40.5%"></colgroup>
           <thead>
             <tr><th>评估维度</th><th>用友 YonBIP（iuap 平台）</th><th>金蝶云·苍穹</th></tr>
           </thead>
           <tbody>
+            <tr><td>平台定位</td><td>BIP 商业创新平台，iuap 作为数智化技术底座</td><td>EBC 企业业务能力平台，苍穹是企业级 PaaS</td></tr>
             <tr><td>技术底座</td><td>云原生：K8s + Docker + ServiceMesh，可组合的微服务治理与 DevOps 工程化；YMS 云中间件统一技术栈、适配跨云多云。</td><td>云原生：容器化 + 微服务 + K8s 编排 + DevOps；官方口径为"微服务 + Docker 容器 + 分布式数据库"，支持弹性伸缩与故障自愈。</td></tr>
             <tr><td>开发平台</td><td>YonBuilder：元数据驱动，可视化 + 低代码 + 原生全代码三种方式并存，拖拽建模 + 在线脚本，多端编译。</td><td>KDDM：融合 EA / MDA / DDD 的动态领域模型，模型驱动低代码，可视化设计器构建微服务化自定义应用。</td></tr>
+            <tr><td>建模思想</td><td>元数据驱动 + 统一运行框架：模型即应用，二开沉淀在元数据里</td><td>动态领域模型：业务对象、表单、流程由元数据描述，运行期加载</td></tr>
             <tr><td>扩展方式</td><td>可视化配置 + 在线 JavaScript 脚本（前端页面与后台逻辑，无需部署）+ 插件化 / 模板化扩展 + 连接器共建。</td><td>模型化扩展 + 可视化设计器 + 流程编排（BPMN 2.0）+ 开放集成平台。</td></tr>
             <tr><td>集成能力</td><td>连接集成平台：连接器、协议转换、流程引擎、脚本引擎、数据转换、监控分析。</td><td>开放集成平台 + 流程服务云（按 BPMN 2.0 规范建模与运行）。</td></tr>
             <tr><td>中间件 / 应用服务器</td><td>YMS 云中间件（统一技术栈、跨云适配）；YMC 云监控中心。</td><td>Apusic 应用服务器 AAS（Jakarta EE 8/9，Web / EJB / WebService 容器，微内核）+ ADCC 分布式配置中心（for Nacos）。</td></tr>
             <tr><td>AI 能力</td><td>智能中台。</td><td>Agent 开发平台，多智能体与"四横一纵"能力架构。</td></tr>
             <tr><td>部署形态</td><td>公有云 / 专属云 / 私有云，多云适配、云上云下一体化。</td><td>公有云 / 私有云 / 信创环境，容器化与 K8s 编排。</td></tr>
+            <tr><td>产品线 · 小微</td><td>YonSuite、U8 Cloud</td><td>金蝶云·星辰</td></tr>
+            <tr><td>产品线 · 中型</td><td>U9 cloud（制造业）、NC Cloud</td><td>金蝶云·星空</td></tr>
+            <tr><td>产品线 · 大型</td><td>YonBIP，多个领域云共用 iuap 底座</td><td>金蝶云·星瀚，跑在苍穹 PaaS 之上</td></tr>
           </tbody>
         </table>
       </div>
       <div class="src-note">上表为公开资料口径整理，实际能力与版本以两家官方最新文档为准；是否满足你的场景，需结合自身业务做 PoC 验证。</div>
+      <div class="memo"><span class="m-k">速记</span><p>产品线决定你落在哪一档，建模思想决定二开会不会被升级冲掉，集成能力决定能不能和现有系统接上——这三行比功能清单更早决定成败。</p></div>
     </section>
 
     <section class="arch-block">
-      <div class="kicker">06 · Checklist</div>
+      <div class="kicker">08 · Pragmatic Rules</div>
+      <h2 class="section-title">选型时的六条务实建议</h2>
+      <p class="section-sub">这些是实施项目里反复出现的共性经验，往往比参数对比更早决定成败。</p>
+      <div class="cap-grid">
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="16" rx="1"/><rect x="14" y="4" width="7" height="16" rx="1"/></svg></div><div><b>先分标准域与差异化域</b><p>财务、总账、税务、人力这类通用管理域优先用套件，别自研；真正构成竞争力的业务流程才值得自己写。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6"/><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/></svg></div><div><b>把集成成本算进总成本</b><p>套件与自研系统之间的接口数量，往往比功能多寡更决定成败。选型前先画清数据流向、数清接口数。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg></div><div><b>用 POC 验证低代码上限</b><p>厂商演示的是标准场景。拿最难的一条业务流程（多级审批 + 跨组织 + 特殊核算）做原型，才测得出版台真实能力。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 4v10"/><path d="M8 10l4 4 4-4"/></svg></div><div><b>关注数据主权与导出</b><p>数据能否完整导出、模型是否可逆向、二开代码是否可迁移，决定了将来换方案时的自由度。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6z"/></svg></div><div><b>信创要求会改写结论</b><p>涉及央国企与关键基础设施时，数据库、中间件、操作系统适配是硬门槛，先确认再谈功能。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg></div><div><b>实施周期比功能清单更重要</b><p>大型平台动辄一年起步，期间业务还在变。优先选能分批上线、快速看到价值的方案。</p></div></div>
+      </div>
+    </section>
+
+    <section class="arch-block">
+      <div class="kicker">09 · Checklist</div>
       <h2 class="section-title">选型时，用架构图问这 8 个问题</h2>
       <p class="section-sub">问题问对了，图才画得出来。下面每一条都可以直接拿去做技术澄清会的提纲。</p>
       <div class="ask-grid">
@@ -701,6 +969,7 @@ table.cmp td{color:var(--muted)}
         <div class="q-card"><span class="q-n">07</span><div><b>运维可见性够不够</b><p>指标、日志、链路追踪是否齐全；灰度与回滚怎么做；故障时能否快速定界到某一层。</p></div></div>
         <div class="q-card"><span class="q-n">08</span><div><b>人才与生态</b><p>文档质量、社区活跃度、实施伙伴密度，以及市面上能不能招到熟悉这套平台的人。</p></div></div>
       </div>
+      <div class="src-note" style="margin-top:22px">资料口径：本页平台信息整理自用友、金蝶官方公开资料与公开行业报道，产品能力、版本与报价以厂商最新文档为准；本页用于理解架构与选型维度，不构成选型建议。</div>
     </section>
   </div>
 </section>
