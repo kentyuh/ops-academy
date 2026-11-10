@@ -1,0 +1,30 @@
+name: fix-index
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/fix-index.yml"
+      - "scripts/fix_index.py"
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run patch script
+        run: python3 scripts/fix_index.py
+      - name: Commit if changed
+        run: |
+          if git diff --quiet; then
+            echo "no change"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "fix: 补齐资讯视图缺失的闭合标签"
+          git push
