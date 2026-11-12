@@ -1,0 +1,38 @@
+name: sync index.html
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-index.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch latest published build
+        run: |
+          set -euo pipefail
+          curl -sSL --retry 3 --max-time 60 "https://aka.doubaocdn.com/s/HaknbIEWHU" -o index.html
+          ls -l index.html
+          grep -q 'Ops研习社' index.html
+          grep -q 'Field Notes' index.html
+
+      - name: Commit and push if changed
+        run: |
+          set -euo pipefail
+          git config user.name "ops-academy-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "no change"
+          else
+            git commit -m "chore: sync latest index.html"
+            git push
+          fi
