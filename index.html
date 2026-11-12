@@ -378,7 +378,7 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
 .adr{margin-top:14px;border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--r-sm);background:#0A1220;padding:14px 16px;font-family:var(--mono);font-size:11.5px;line-height:1.95;color:var(--muted);white-space:pre-wrap;overflow-wrap:break-word}
 
 @media (min-width:768px){
-  .arch-stats{grid-template-columns:repeat(5,1fr)}
+  .arch-stats{grid-template-columns:repeat(3,1fr)}
 }
 @media (min-width:820px){
   .duel{grid-template-columns:1fr 44px 1fr}
@@ -404,6 +404,52 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
   .ac-label{text-align:left}
   .ac-arrow{justify-content:flex-start;padding-left:6px}
 }
+/* ===== 学习闭环：小测 / 今日一题 / 错题本 ===== */
+.quiz-wrap{margin-top:18px;border-top:1px dashed var(--border);padding-top:16px}
+.quiz-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.quiz-head b{font-size:14px;display:inline-flex;align-items:center;gap:8px;color:var(--text)}
+.quiz-head b svg{width:15px;height:15px;color:var(--accent)}
+.quiz-head .qn{font-family:var(--mono);font-size:11.5px;color:var(--dim);border:1px solid var(--border);padding:2px 8px;border-radius:999px}
+.q{padding:13px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);margin-bottom:10px}
+.q-stem{font-size:14px;line-height:1.7;margin-bottom:11px;color:var(--text)}
+.q-stem .qno{font-family:var(--mono);font-size:12px;color:var(--accent);margin-right:7px}
+.q-opts{display:grid;gap:8px}
+.q-opt{display:flex;gap:9px;align-items:flex-start;width:100%;text-align:left;padding:9px 11px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--muted);font-size:13.5px;line-height:1.6;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.q-opt:hover{border-color:var(--accent-line);color:var(--text)}
+.q-opt .k{flex:none;font-family:var(--mono);font-size:11px;width:19px;height:19px;border-radius:50%;border:1px solid var(--border-strong);display:flex;align-items:center;justify-content:center;margin-top:1px;color:var(--dim)}
+.q-opt.ok{border-color:var(--accent);background:var(--accent-weak);color:var(--text)}
+.q-opt.ok .k{border-color:var(--accent);color:var(--accent)}
+.q-opt.bad{border-color:rgba(229,104,90,.6);background:rgba(229,104,90,.1);color:var(--text)}
+.q-opt.bad .k{border-color:#E5685A;color:#E5685A}
+.q-opt.dim{opacity:.5}
+.q-exp{margin-top:11px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--surface);border-radius:0 8px 8px 0;font-size:13.5px;line-height:1.75;color:var(--muted);display:none}
+.q-exp.show{display:block}
+.q-exp b{color:var(--accent)}
+.mod-quiz{margin-top:16px;border-top:1px dashed var(--border);padding-top:14px}
+.mod-quiz-h{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted);margin-bottom:11px;flex-wrap:wrap}
+.pass-tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--border-strong);color:var(--dim);white-space:nowrap}
+.pass-tag.passed{color:var(--accent);border-color:var(--accent-line);background:var(--accent-weak)}
+.wrong-card{margin-top:22px}
+.wrong-head{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;padding:14px 16px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);font-size:14px;color:var(--text)}
+.wrong-head .n{font-family:var(--mono);color:var(--accent);margin-left:6px}
+.wrong-body{display:none;border:1px solid var(--border);border-top:0;border-radius:0 0 var(--r) var(--r);background:var(--surface);padding:14px 16px}
+.wrong-body.show{display:block}
+.wrong-item{padding:11px 0;border-bottom:1px dashed var(--border)}
+.wrong-item:last-child{border-bottom:0}
+.wrong-item .wq{font-size:13.5px;line-height:1.7;color:var(--text);margin-bottom:6px}
+.wrong-item .wa{font-size:12.5px;line-height:1.7;color:var(--muted)}
+.wrong-item .wa b{color:var(--accent)}
+.lrt{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+/* 远图实战：分层图与口径对比 */
+.yt-shell{border:1px solid var(--border-strong);border-radius:var(--r);background:var(--surface2);padding:16px;margin-top:16px}
+.yt-layer{border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:11px 14px;margin-bottom:10px}
+.yt-layer .yt-k{font-family:var(--mono);font-size:11px;letter-spacing:.6px;color:var(--dim);margin-bottom:6px}
+.yt-layer .yt-t{font-size:14px;color:var(--text);line-height:1.6}
+.yt-layer.main{border-color:var(--accent-line);background:var(--accent-weak)}
+.yt-layer.main .yt-k{color:var(--accent)}
+.yt-split{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:10px}
+.yt-arrow{text-align:center;font-family:var(--mono);font-size:12px;color:var(--dim);margin:-4px 0 6px}
+@media (min-width:768px){.yt-split{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
@@ -444,7 +490,7 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
       <div>
         <div class="kicker">DevOps · 自动运维 · 学习控制台</div>
         <h1>把 DevOps 与自动运维，<br>拆成<span class="hl">每天能学完的一课</span></h1>
-        <p class="lead">从 Git 到 Kubernetes，从 CI/CD 到 SRE——系统化的知识地图，配每日自动轮换的一课与一条实用命令，帮你稳步建立自动化运维能力。</p>
+        <p class="lead">从 Git 到 Kubernetes，从 CI/CD 到 SRE——系统化知识地图，配每日轮换的一课、一道检验题和一条实用命令。每个模块另有 3 题小测，答对 2 题才算通过：读完不算学到，答对才算。</p>
         <div class="hero-stats">
           <div class="stat"><span class="num" id="statModules">9</span><span class="lbl">知识模块</span></div>
           <div class="stat"><span class="num" id="statItems">—</span><span class="lbl">知识点</span></div>
@@ -494,6 +540,7 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
             <div class="cmd-exp" id="todayCmdExp"></div>
           </div>
         </div>
+        <div class="quiz-wrap" id="dailyQuizWrap"></div>
         <div class="today-actions">
           <button class="btn teal sm" id="btnMarkToday">标记今日已学</button>
           <button class="btn sm" id="btnNextToday">换一课</button>
@@ -506,7 +553,7 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
     <section style="margin-top:44px" aria-label="知识地图">
       <div class="kicker">Knowledge Map</div>
       <h2 class="section-title">知识地图</h2>
-      <p class="section-sub">按模块组织全部知识点。点击模块展开明细，勾选「已学」记录进度，进度保存在本地浏览器。</p>
+      <p class="section-sub">按模块组织全部知识点。点开模块看明细，底部有 3 题小测（答对 2 题通过）；答错的题自动进错题本。进度与通过状态保存在本浏览器。</p>
       <div class="search-row">
         <input class="search-input" id="knowSearch" type="text" placeholder="搜索知识点，如：金丝雀 / Terraform / kubectl ...">
         <span class="search-count" id="searchCount"></span>
@@ -527,6 +574,7 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
           <button class="btn ghost sm" id="btnReset">重置进度</button>
         </div>
       </div>
+      <div class="wrong-card" id="wrongCard"></div>
     </section>
 
     <!-- 学习路径 -->
@@ -604,6 +652,7 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
       <div class="stat"><b>2</b><span>套装平台</span></div>
       <div class="stat"><b>11</b><span>对比维度</span></div>
       <div class="stat"><b>8</b><span>选型问题</span></div>
+      <div class="stat"><b>15</b><span>POC 场景</span></div>
     </div>
 
     <section class="arch-block">
@@ -944,7 +993,97 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
     </section>
 
     <section class="arch-block">
-      <div class="kicker">08 · Pragmatic Rules</div>
+      <div class="kicker">08 · Field Notes · 远图实战</div>
+      <h2 class="section-title">把这套架构，落到自己的项目上</h2>
+      <p class="section-sub">下面不是通用示例，是远图技术开发平台的真实规划口径。看架构图别只看方框，要看清三件事：谁是采购主体、谁负责什么、哪些数字根本不属于这个平台。</p>
+
+      <div class="yt-shell">
+        <div class="yt-layer"><div class="yt-k">L1 业务价值与治理</div><div class="yt-t">业务指标 · 流程 Owner · 风险与审批 · 价值度量</div></div>
+        <div class="yt-arrow">▲ 目标与约束自上而下</div>
+        <div class="yt-layer"><div class="yt-k">L2 业务使用与协同</div><div class="yt-t">员工 · 开发团队 · 业务系统 · 经授权的领域 Agent</div></div>
+        <div class="yt-arrow">▲ 能力以 API / 事件 / 扩展点暴露</div>
+        <div class="yt-layer main"><div class="yt-k">L3 技术开发平台（本次采购主体）</div><div class="yt-t">项目模板与框架 · 组件 / 工作流 / 服务治理 · CI/CD 与质量门禁 · 制品 / 环境 / 发布回滚 · API / 事件与扩展 · 容器部署与可观测 · 权限 / 审计 / 安全 · 研发证据与接口契约</div></div>
+        <div class="yt-arrow">▼ 平台提供能力，不替代领域职责</div>
+        <div class="yt-split">
+          <div class="yt-layer"><div class="yt-k">业务应用与 SAP</div><div class="yt-t">权威业务 API 与状态</div></div>
+          <div class="yt-layer"><div class="yt-k">数据 / 知识底座</div><div class="yt-t">授权视图与检索</div></div>
+          <div class="yt-layer"><div class="yt-k">AI / Agent 平台</div><div class="yt-t">模型、编排、评测</div></div>
+        </div>
+        <div class="yt-layer" style="margin-bottom:0"><div class="yt-k">L5 现有基础设施</div><div class="yt-t">Kubernetes · 计算 · 网络 · 存储 · 安全</div></div>
+      </div>
+      <div class="memo"><span class="m-k">速记</span><p>技术平台是「开发 + 交付 + 运行 + 集成 + 安全」的底座，不是流程设计、数据治理或模型训练的替代品。横向贯穿的是身份、权限、审计、配置与版本。</p></div>
+
+      <div class="kicker" style="margin-top:34px">Capability Map</div>
+      <h2 class="section-title">六个能力域，采购时逐项对号</h2>
+      <p class="section-sub">这六块拼起来才是完整平台。缺哪一块，后面都要用定制开发或人工运维补回来——而定制与人工，正是五年 TCO 里最贵的部分。</p>
+      <div class="cap-grid">
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><div><b>框架与组件</b><p>Java 主流栈 + 可插拔 starter / 插件、Vue3 前端脚手架与微前端方式；数据库、缓存、搜索、对象存储、MQ、Job 要么自带、要么说清替换路径与成本。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5h16v14H4z"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 9.5L9.6 10.9"/><path d="M17.5 9.5L14.4 10.9"/></svg></div><div><b>研发交付与门禁</b><p>提交即触发构建、测试、制品、部署、验证与回滚；对接内网 GitLab / Jenkins / Nexus；单测、覆盖率、代码与安全扫描可按阈值拦截，例外要有期限和留痕。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7h18"/><path d="M6 7v10a2 2 0 002 2h8a2 2 0 002-2V7"/><path d="M10 11v4"/><path d="M14 11v4"/></svg></div><div><b>环境与发布治理</b><p>dev / test / staging / prod 隔离、配额、配置与应用解耦、敏感配置加密、资源回收；平台内多级审批，未批准不得发布，审批绑定发布批次。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><b>观测与告警</b><p>主机、容器、中间件、应用四层指标，日志集中检索并与请求关联；告警分级、去重、抑制、升级与恢复；飞书通知只发脱敏摘要和内网链接。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l8 4v12l-8 4-8-4V6z"/><path d="M9 12l2 2 4-4"/></svg></div><div><b>安全与审计</b><p>完全私有化与离线安装、关闭遥测并披露外联；最小权限 RBAC、敏感操作确认、登录与发布审计可导出；SBOM 与漏洞响应，密钥不进源码、镜像与普通日志。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div><div><b>开放集成与 Agent 就绪</b><p>核心能力有 OpenAPI、鉴权、限流、版本与错误码；输出服务目录与事件契约；Agent 调用走服务身份 + 审计，配超时、失败、重试与回退边界。</p></div></div>
+      </div>
+
+      <div class="kicker" style="margin-top:34px">Boundary</div>
+      <h2 class="section-title">边界比功能更重要：谁负责什么</h2>
+      <p class="section-sub">选型谈判最常见的失败，是把别人的责任写进了平台采购范围。这张表可以直接拿去开会。</p>
+      <div class="tbl-scroll">
+        <table class="mini">
+          <colgroup><col style="width:20%"><col style="width:40%"><col style="width:40%"></colgroup>
+          <thead><tr><th>对象</th><th>它负责</th><th>平台只做</th></tr></thead>
+          <tbody>
+            <tr><td>业务应用与 SAP</td><td>维护业务规则、交易状态、主数据权威来源</td><td>提供开发、集成、运行能力；不复制其权威账本</td></tr>
+            <tr><td>数据 / 知识底座</td><td>异构采集、ETL、数仓、同步视图、数据质量</td><td>消费经授权的 API / 视图与事件；不重复采购数仓</td></tr>
+            <tr><td>业务本体</td><td>实体、关系、口径、知识及版本，由业务 Owner 定义</td><td>提供接口契约、事件、权限与元数据；不默认供应商已有企业本体</td></tr>
+            <tr><td>AI / Agent 平台</td><td>模型接入、知识检索、Agent 编排与评测</td><td>提供授权调用、扩展点、流程与审计；不承诺交付完整 Agent 产品</td></tr>
+            <tr><td>基础设施与 IT 运维</td><td>计算、网络、存储、K8s 基础环境与企业安全策略</td><td>部署在批准环境，输出资源要求与运维接口</td></tr>
+            <tr><td>流程与业务域</td><td>L1—L6 流程、业务规则、场景优先级、Owner</td><td>提供工作流、审批、审计等通用能力</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="memo"><span class="m-k">速记</span><p>数据访问有一条底线：Agent 不直连核心生产 OLTP 库，检索走授权视图；要改业务数据只能调有权限的业务 API，经规则、幂等与审批，不能直接写库。</p></div>
+
+      <div class="kicker" style="margin-top:34px">Three Traps</div>
+      <h2 class="section-title">三个最容易被套用的口径</h2>
+      <p class="section-sub">数字看起来很像，归属却完全不同。谈判时这三句一定要说清楚，否则报价和验收都会跑偏。</p>
+      <div class="cap-grid">
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/></svg></div><div><b>20 TB / 50 TB</b><p>那是数据底座的存储规划，不是技术平台的容量指标。平台要按接入应用数、开发者并发、构建次数与峰值、制品与日志留存、环境数量与 HA 故障域单独估算，否则就是把别人的账算到自己头上。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg></div><div><b>200 人日常使用</b><p>≠ 200 人并发，≠ 200 个开发者同时构建。压测参数必须由需求方统一给定：活跃并发、构建峰值、流水线时长、容器副本，否则每家供应商测出来的成绩不可比。</p></div></div>
+        <div class="cap"><div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><div><b>API 清单 ≠ 业务本体</b><p>把接口列出来只是目录，不是本体。本体是实体、关系、口径与版本，归业务与数据团队；平台能做的是让契约可查、事件可订阅、元数据可交换。</p></div></div>
+      </div>
+
+      <div class="kicker" style="margin-top:34px">POC</div>
+      <h2 class="section-title">POC 就测这 15 件事</h2>
+      <p class="section-sub">选型不能靠演示和口头承诺。下面每一项都要在供应商自备的隔离环境里跑出证据；带「可选」的不进必测结果。</p>
+      <div class="tbl-scroll">
+        <table class="mini">
+          <colgroup><col style="width:12%"><col style="width:66%"><col style="width:22%"></colgroup>
+          <thead><tr><th>编号</th><th>验证重点</th><th>执行口径</th></tr></thead>
+          <tbody>
+            <tr><td>P01</td><td>离线安装、容器化、编排、数据不出域</td><td>必测</td></tr>
+            <tr><td>P02</td><td>Java 与扩展语言模板、Git 对接、制品与离线代理</td><td>必测</td></tr>
+            <tr><td>P03</td><td>自定义脚手架、前端扩展、开放接口</td><td>必测（低代码与 AI 展示可选）</td></tr>
+            <tr><td>P04</td><td>流水线、质量门禁、平台内审批、飞书通知与回滚</td><td>必测（飞书端审批可选）</td></tr>
+            <tr><td>P05</td><td>工作流、服务治理、分布式事务</td><td>必测</td></tr>
+            <tr><td>P06</td><td>API 网关、开放 API、租户与权限</td><td>必测</td></tr>
+            <tr><td>P07</td><td>外部数据库、访问扩展、多数据源、配置外部化</td><td>选外部库时必测</td></tr>
+            <tr><td>P08</td><td>MQ 消息语义与 Job 调度、故障恢复</td><td>必测，自带 / 外部模式先声明</td></tr>
+            <tr><td>P09</td><td>Redis、ES 与对象存储</td><td>对象存储必测，外部 Redis / ES 条件必测</td></tr>
+            <tr><td>P10</td><td>高可用、升级、节点摘除与弹性伸缩</td><td>必测</td></tr>
+            <tr><td>P11</td><td>指标、日志、追踪、告警、通知与运维门户</td><td>必测（AI 运维展示可选）</td></tr>
+            <tr><td>P12</td><td>性能基线、容量趋势与扩容建议</td><td>必测，参数预先统一</td></tr>
+            <tr><td>P13</td><td>升级回退、授权源码构建、SBOM 与漏洞响应</td><td>必测</td></tr>
+            <tr><td>P14</td><td>数据不出域、权限、审计与密钥保护</td><td>必测</td></tr>
+            <tr><td>P15</td><td>独立案例、实施服务与五年成本</td><td>必测，书面核验</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="memo"><span class="m-k">速记</span><p>POC 通过不等于验收通过：中标后要在自己的环境重新离线安装一遍。报价要拆到五年 TCO——许可、中间件、资源、实施、适配、定制、培训、维保、升级、扩容与退出，逐项列数量、单价和增长假设。</p></div>
+    </section>
+
+    <section class="arch-block">
+      <div class="kicker">09 · Pragmatic Rules</div>
       <h2 class="section-title">选型时的六条务实建议</h2>
       <p class="section-sub">这些是实施项目里反复出现的共性经验，往往比参数对比更早决定成败。</p>
       <div class="cap-grid">
@@ -958,7 +1097,7 @@ table.mini td:first-child,table.mini th:first-child{color:var(--text);font-weigh
     </section>
 
     <section class="arch-block">
-      <div class="kicker">09 · Checklist</div>
+      <div class="kicker">10 · Checklist</div>
       <h2 class="section-title">选型时，用架构图问这 8 个问题</h2>
       <p class="section-sub">问题问对了，图才画得出来。下面每一条都可以直接拿去做技术澄清会的提纲。</p>
       <div class="ask-grid">
@@ -1071,6 +1210,46 @@ const KNOWLEDGE = [
 {id:'m9-5',mod:'自动化运维进阶',title:'密钥管理 HashiCorp Vault',desc:'密码、令牌、证书不应散落在代码与文件里。Vault 提供动态密钥（临时凭证）、租约、审计；应用通过认证后按需取用。入门路径：静态密钥 → 动态数据库凭据 → 加密即服务。',code:'vault kv put secret/db db_user=app db_pass=xxx\nvault kv get secret/db\n# 应用侧：Secret 挂载 / 云 KMS 注入',tags:['安全','密钥']},
 {id:'m9-6',mod:'自动化运维进阶',title:'自愈与 Runbook 自动化',desc:'把高频故障的处理步骤写成 Runbook，再逐步自动化：告警触发 → 自动诊断（拉指标、日志、拓扑）→ 执行预批准的自愈动作 → 失败才升级到人。2026 年的趋势是 AI Agent 接管已知故障模式的自动处置，人只处理新问题。',code:null,tags:['自愈','趋势']}
 /* KNOWLEDGE_MORE */
+];
+
+/* ===== 小测题库：每模块 3 题，答对 2 题即通过 ===== */
+const QUIZ = [
+/* 模块1 */
+{id:'q-m1-1',mod:'基础与文化',q:'DORA 四指标里，只看部署频率会掩盖什么问题？',opts:['团队协作氛围变差','变更失败率与故障恢复时间是否在恶化','代码提交量增长过快','测试覆盖率是否下降'],a:1,why:'四个指标要成组看：频率上去了但失败率高、MTTR 变长，说明是在拿稳定性换速度。'},
+{id:'q-m1-2',mod:'基础与文化',q:'持续交付与持续部署的真正差别在哪？',opts:['是否有自动化测试','是否每次通过检查就自动放量给用户','是否使用容器部署','是否采用主干开发'],a:1,why:'持续交付保证随时可发布，放不放量由人决定；持续部署把「放量」这一步也自动化了。'},
+{id:'q-m1-3',mod:'基础与文化',q:'团队只有 5% 流量切分能力、错误率监控也不全，该先上金丝雀吗？',opts:['直接上金丝雀，反正只放 5% 流量','先补监控与流量切分，再上金丝雀','改用蓝绿部署，因为它不需要监控','用滚动更新最省事'],a:1,why:'金丝雀的前提是能按比例切流量并能读到错误率；两个前提都不具备时，它等于没有观察的赌博。'},
+/* 模块2 */
+{id:'q-m2-1',mod:'版本控制 Git',q:'错误提交已经 push 到共享 main，正确的回滚方式是？',opts:['git reset --hard 后强制推送','git revert 生成一个反向提交','删掉分支重新建','用 rebase -i 改写历史'],a:1,why:'共享分支不改历史。revert 安全、留痕、不伤协作者；强推会让所有人的本地历史错乱。'},
+{id:'q-m2-2',mod:'版本控制 Git',q:'对已共享的分支 rebase 后强推，导致同事历史冲突，问题出在哪？',opts:['rebase 命令本身有 bug','对已共享分支改写了历史','应该改用 cherry-pick 搬运','应该关闭 PR 重新提交'],a:1,why:'规则很简单：未推送的本地分支随便 rebase；已经共享的分支只 merge，不再改写历史。'},
+{id:'q-m2-3',mod:'版本控制 Git',q:'给已发布的 API 增加一个必填参数，SemVer 该升哪一位？',opts:['PATCH','MINOR','MAJOR','不需要升版本'],a:2,why:'必填参数会让既有调用方直接失败，属于不兼容变更，升 MAJOR。'},
+/* 模块3 */
+{id:'q-m3-1',mod:'CI/CD 流水线',q:'把安全扫描放到流水线最后、部署前才跑，主要代价是什么？',opts:['扫描结果更准确','问题发现太晚，返工要重走构建与评审','构建速度变慢','上线后无法回滚'],a:1,why:'阶段越靠前越便宜。越晚发现问题，修复成本要叠加重新构建、重新测试、重新审批的时间。'},
+{id:'q-m3-2',mod:'CI/CD 流水线',q:'部署时登录服务器改配置文件再启动，破坏了哪条原则？',opts:['最小权限','不可变制品——测过的就是上线的','主干开发','灰度发布'],a:1,why:'构建一次、处处使用。部署期改文件，等于生产跑的不是测试验证过的那一份，出问题无法复现。'},
+{id:'q-m3-3',mod:'CI/CD 流水线',q:'滚动更新为什么做不到蓝绿那样的秒级整体回滚？',opts:['K8s 不支持回滚','新旧版本已经混合运行，回退要靠再滚一次','必须重建整个集群','镜像不能复用'],a:1,why:'滚动期间新旧 Pod 共存，没有整体切换的开关；大版本不兼容时，再滚一次也有风险。'},
+/* 模块4 */
+{id:'q-m4-1',mod:'容器化',q:'Dockerfile 里把 COPY . . 写在 RUN npm ci 之前，后果是什么？',opts:['镜像体积更小','代码一改，后面所有层的缓存全部失效','构建更安全','对构建速度没有影响'],a:1,why:'分层缓存从上往下命中。频繁变化的指令要尽量往后放，依赖安装放前面才能复用缓存。'},
+{id:'q-m4-2',mod:'容器化',q:'多阶段构建最直接的收益是？',opts:['构建速度更快','运行镜像更小、攻击面更小','支持更多编程语言','自动扫描漏洞'],a:1,why:'构建阶段装编译工具链，运行阶段只拷贝产物与运行时依赖，最终镜像小很多。'},
+{id:'q-m4-3',mod:'容器化',q:'容器以非 root 运行并挂只读根文件系统，主要降低什么风险？',opts:['镜像体积膨胀','容器逃逸成功后的破坏面','网络延迟','启动时间'],a:1,why:'逃逸无法完全避免，纵深防御的意义是让逃逸之后拿不到 root 与写权限，破坏面被压到最小。'},
+/* 模块5 */
+{id:'q-m5-1',mod:'Kubernetes',q:'Pod 一直是 Pending，第一手信息该看哪里？',opts:['容器日志','kubectl describe pod 的事件','应用代码','镜像仓库'],a:1,why:'Pending 阶段容器还没起来，没有日志可看；事件里会直接写资源不足、污点、亲和性不满足。'},
+{id:'q-m5-2',mod:'Kubernetes',q:'livenessProbe 与 readinessProbe 的区别是？',opts:['没有实质区别','前者失败重启容器，后者失败先摘掉流量','前者只用于 Job','后者只用于数据库'],a:1,why:'探活失败=进程不健康需要重启；就绪失败=先别把流量给它，但容器不重启。'},
+{id:'q-m5-3',mod:'Kubernetes',q:'K8s Secret 里的 base64 是否等于加密？',opts:['是，已经加密','不是，只是编码，密钥应走 KMS/Vault','只要不进 Git 就绝对安全','etcd 加密就够了'],a:1,why:'base64 可逆。Secret 默认只做编码，密钥应由外部密钥管理注入，并限制读取权限与审计。'},
+/* 模块6 */
+{id:'q-m6-1',mod:'基础设施即代码',q:'terraform plan 在日常运维里最被低估的用途是？',opts:['加快 apply 速度','漂移检测——真实资源与代码是否一致','自动生成文档','备份 state'],a:1,why:'plan 会把真实资源与代码声明做对比，手工改动、外部变更造成的漂移一眼可见，等于免费的漂移探测器。'},
+{id:'q-m6-2',mod:'基础设施即代码',q:'state 放本地磁盘、多人各自 apply，核心风险是？',opts:['语法报错','互相覆盖，资源丢失或重复创建','构建变慢','不能回滚'],a:1,why:'state 是资源账本。必须远程存储并加锁，否则两人同时 apply 就是一场事故。'},
+{id:'q-m6-3',mod:'基础设施即代码',q:'Ansible 的幂等性靠什么成立？',opts:['每次全量重跑一遍','模块声明目标状态，已满足就不动作','用 shell 脚本执行','靠 inventory 排序'],a:1,why:'幂等来自模块先判断现状再决定是否动手；直接用 command/shell 裸跑命令通常不幂等。'},
+/* 模块7 */
+{id:'q-m7-1',mod:'可观测性',q:'要定位一次请求慢在哪一跳，优先用哪种信号？',opts:['指标 Metrics','日志 Logs','链路 Trace','告警 Alert'],a:2,why:'指标告诉你整体变慢，日志告诉你哪报错，只有 Trace 能拆出跨服务的分段耗时，指出慢在哪一跳。'},
+{id:'q-m7-2',mod:'可观测性',q:'统计 HTTP 请求总数，该用哪种指标类型？',opts:['Gauge','Counter','Histogram','Summary'],a:1,why:'Counter 单调递增，配 rate() 算 QPS；Gauge 用于可增可减的瞬时值，比如内存占用。'},
+{id:'q-m7-3',mod:'可观测性',q:'判断一条告警是否合格，最简单的判据是？',opts:['是否用了 PromQL 编写','收到的人能否立刻采取行动','阈值是否精确到小数','是否发到了群里'],a:1,why:'不可执行的告警只会训练团队忽略它。至少要能回答：出了什么事、影响谁、先做什么。'},
+/* 模块8 */
+{id:'q-m8-1',mod:'SRE 与稳定性',q:'错误预算已经花完，正确的动作是？',opts:['继续发布，加快迭代把功能补回来','冻结高风险发布，优先恢复稳定性','把 SLO 调低一档','先把告警关掉降噪'],a:1,why:'错误预算是发布决策的硬约束。花完就把注意力转回可靠性，而不是改目标让它看起来达标。'},
+{id:'q-m8-2',mod:'SRE 与稳定性',q:'下面哪一项属于 Toil？',opts:['写一次自动化脚本','每天手工重启同一批服务','设计容量模型','组织事故复盘'],a:1,why:'Toil 是重复、手工、无持久价值、随规模线性增长的活，而且能被自动化替代。'},
+{id:'q-m8-3',mod:'SRE 与稳定性',q:'无指责复盘最重要的产出是？',opts:['认定责任人','可跟踪闭环的行动项','一封事故通报','对当事人的处罚'],a:1,why:'追问的是系统为何允许错误发生；只有行动项被跟踪到关闭，组织才算真的学到。'},
+/* 模块9 */
+{id:'q-m9-1',mod:'自动化运维进阶',q:'Shell 脚本开头写 set -euo pipefail，解决了什么？',opts:['让脚本执行更快','出错即停、未定义变量报错、管道中的失败可见','自动补日志','自动重试失败命令'],a:1,why:'默认 shell 会忽略中间步骤失败继续往下跑。这三项让失败在第一现场就暴露。'},
+{id:'q-m9-2',mod:'自动化运维进阶',q:'cron 最典型的运维坑是什么？',opts:['不支持秒级调度','漏跑、无重试、无告警，失败了没人知道','不能写日志','只能 root 使用'],a:1,why:'cron 只负责按时间拉起进程。定时任务必须有日志、告警、幂等与失败重试，systemd timer 更完整。'},
+{id:'q-m9-3',mod:'自动化运维进阶',q:'配置中心相对配置文件的核心价值是？',opts:['存储容量更大','动态下发与版本回滚，避免改配置就得重启','自动加密','替代 Git 做版本管理'],a:1,why:'集中管理 + 监听热更新 + 版本回退，才是配置中心的意义；否则只是把文件换了个地方放。'}
 ];
 
 const COMMANDS = [
@@ -1193,7 +1372,8 @@ const TIPS = [
   function renderProgress(){
     var done = loadDone();
     var total = KNOWLEDGE.length;
-    el('progressText').textContent = done.size+' / '+total;
+    var pass = loadPass();
+    el('progressText').textContent = done.size+' / '+total+' 已学 · '+pass.size+' / '+MODULES.length+' 模块通过';
     el('progressBar').style.width = (total? (done.size/total*100):0)+'%';
     el('statItems').textContent = total;
     // 各模块进度
@@ -1254,7 +1434,7 @@ const TIPS = [
             '</div>'+
             '<button class="learn-toggle" data-id="'+k.id+'" title="标记为已学">'+svgCheck()+'</button>'+
           '</li>';
-        }).join('')+'</ul></div>';
+        }).join('')+'</ul>'+modQuizHTML(mod)+'</div>';
       if(q && !matched.length){ card.style.display='none'; }
       grid.appendChild(card);
     });
@@ -1275,6 +1455,10 @@ const TIPS = [
         toggleDone(tg.dataset.id);
       });
     });
+    grid.querySelectorAll('.mod-quiz').forEach(function(wrap){
+      var mod = wrap.dataset.mod;
+      bindQuiz(wrap, function(){ refreshModPass(mod, wrap); });
+    });
     renderProgress();
   }
 
@@ -1291,6 +1475,112 @@ const TIPS = [
       '<path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>'                                                                               // 自动化/闪电
     ];
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+paths[idx%paths.length]+'</svg>';
+  }
+
+  /* ---------- 小测与错题本 ---------- */
+  var LS_PASS = 'ops_quiz_pass_v1', LS_WRONG = 'ops_quiz_wrong_v1';
+  var QMAP = {};
+  QUIZ.forEach(function(q){ QMAP[q.id] = q; });
+  function loadSet(key){ try{ return new Set(JSON.parse(localStorage.getItem(key)||'[]')); }catch(e){ return new Set(); } }
+  function saveSet(key, s){ localStorage.setItem(key, JSON.stringify(Array.from(s))); }
+  function loadPass(){ return loadSet(LS_PASS); }
+  function loadWrong(){ return loadSet(LS_WRONG); }
+  function letter(i){ return 'ABCD'.charAt(i); }
+
+  function quizCardHTML(q, no){
+    return '<div class="q" data-qid="'+q.id+'">'+
+      '<div class="q-stem">'+(no?'<span class="qno">Q'+no+'</span>':'')+esc(q.q)+'</div>'+
+      '<div class="q-opts">'+q.opts.map(function(o,i){
+        return '<button type="button" class="q-opt" data-i="'+i+'"><span class="k">'+letter(i)+'</span><span>'+esc(o)+'</span></button>';
+      }).join('')+'</div>'+
+      '<div class="q-exp"></div>'+
+    '</div>';
+  }
+
+  function bindQuiz(root, onAnswer){
+    root.querySelectorAll('.q').forEach(function(qEl){
+      if(qEl.dataset.bound) return;
+      qEl.dataset.bound = '1';
+      var q = QMAP[qEl.dataset.qid];
+      if(!q) return;
+      var answered = false;
+      var opts = qEl.querySelectorAll('.q-opt');
+      opts.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          if(answered) return;
+          answered = true;
+          var pick = parseInt(btn.dataset.i, 10);
+          opts.forEach(function(b, i){
+            if(i === q.a){ b.classList.add('ok'); }
+            else if(i === pick){ b.classList.add('bad'); }
+            else { b.classList.add('dim'); }
+          });
+          var exp = qEl.querySelector('.q-exp');
+          exp.innerHTML = '<b>'+(pick===q.a ? '答对了。' : '正确答案是 '+letter(q.a)+'。')+'</b> '+esc(q.why);
+          exp.classList.add('show');
+          if(pick !== q.a){
+            var w = loadWrong(); w.add(q.id); saveSet(LS_WRONG, w); renderWrong();
+          }
+          if(onAnswer) onAnswer(qEl);
+        });
+      });
+    });
+  }
+
+  function modQuizHTML(mod){
+    var qs = QUIZ.filter(function(q){ return q.mod === mod; });
+    if(!qs.length) return '';
+    return '<div class="mod-quiz" data-mod="'+esc(mod)+'">'+
+      '<div class="mod-quiz-h"><span>模块小测 · '+qs.length+' 题，答对 2 题通过</span><span class="pass-tag" data-pass="'+esc(mod)+'">待测</span></div>'+
+      qs.map(function(q,i){ return quizCardHTML(q, i+1); }).join('')+
+    '</div>';
+  }
+
+  function refreshModPass(mod, wrap){
+    var list = wrap.querySelectorAll('.q');
+    var total = list.length, done = 0, right = 0;
+    list.forEach(function(qEl){
+      var exp = qEl.querySelector('.q-exp');
+      if(!exp.classList.contains('show')) return;
+      done++;
+      if(!qEl.querySelector('.q-opt.bad')) right++;
+    });
+    var tag = wrap.querySelector('.pass-tag');
+    if(done < total){ tag.textContent = '进行中 '+done+'/'+total; return; }
+    if(right >= 2){
+      tag.textContent = '已通过 '+right+'/'+total;
+      tag.classList.add('passed');
+      var p = loadPass(); p.add(mod); saveSet(LS_PASS, p);
+    } else {
+      tag.textContent = '未通过 '+right+'/'+total;
+    }
+    renderProgress();
+  }
+
+  function renderDailyQuiz(){
+    var wrap = el('dailyQuizWrap');
+    if(!wrap) return;
+    var q = QUIZ[baseSeed % QUIZ.length];
+    wrap.innerHTML = '<div class="quiz-head"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>今日一题 · 检验一下</b><span class="qn">'+esc(q.mod)+'</span></div>'+quizCardHTML(q, 0);
+    bindQuiz(wrap, null);
+  }
+
+  function renderWrong(){
+    var card = el('wrongCard');
+    if(!card) return;
+    var w = loadWrong();
+    if(!w.size){ card.innerHTML = ''; return; }
+    var items = Array.from(w).map(function(id){
+      var q = QMAP[id];
+      if(!q) return '';
+      return '<div class="wrong-item"><div class="wq">'+esc(q.q)+'</div>'+
+        '<div class="wa"><b>'+letter(q.a)+'. '+esc(q.opts[q.a])+'</b> —— '+esc(q.why)+'</div></div>';
+    }).join('');
+    card.innerHTML = '<div class="wrong-head" id="wrongToggle"><span>错题本<span class="n">'+w.size+'</span> 题</span><span style="color:var(--accent);font-size:12.5px">展开复习</span></div>'+
+      '<div class="wrong-body" id="wrongBody">'+items+
+      '<div class="lrt"><button class="btn ghost sm" id="btnClearWrong">清空错题本</button></div></div>';
+    el('wrongToggle').addEventListener('click', function(){ el('wrongBody').classList.toggle('show'); });
+    el('btnClearWrong').addEventListener('click', function(){ localStorage.removeItem(LS_WRONG); renderWrong(); });
   }
 
   /* ---------- 资讯页 ---------- */
@@ -1378,7 +1668,9 @@ const TIPS = [
   el('statModules').textContent = MODULES.length;
   el('footYear').textContent = '© ' + new Date().getFullYear();
   renderToday();
+  renderDailyQuiz();
   renderMap('');
+  renderWrong();
   renderNews();
   route();
 })();
